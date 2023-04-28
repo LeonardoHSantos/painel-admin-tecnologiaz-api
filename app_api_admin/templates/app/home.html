@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% load static %}
+{% block content %}
+    <div class="content">
+        <div class="form-login">
+
+            {% if user.is_authenticated %}
+                <div>
+                    <div class="content-form-home">
+                        <div class="container-filtros-principal">
+                            <form action="" id="form-filtros-principal">
+                                <div class="block-filtros-datas">
+                                    <div class="contents-filtros-datas">
+                                        <label for="input-data-inicial">Data inicial</label>
+                                        <input type="date" name="input-data-inicial" id="input-data-inicial">
+                                    </div>
+                                    <div class="contents-filtros-datas">
+                                        <label for="input-data-final">Data Final</label>
+                                        <input type="date" name="input-data-final" id="input-data-final">
+                                    </div>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-mercado">Mercado</label>
+                                    <select name="input-mercado" id="input-mercado">
+                                        <option value="todos">todos</option>
+                                        <option value="aberto">aberto</option>
+                                        <option value="otc">otc</option>
+                                    </select>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-ativo">Ativo</label>
+                                    <select name="input-ativo" id="input-ativo">
+                                        <option value="todos">todos</option>
+                                        {% for active in list_actives %}
+                                            <option value="{{ active }}">{{ active }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-direcao">Direção</label>
+                                    <select name="input-direcao" id="input-direcao">
+                                        <option value="todos">todos</option>
+                                        <option value="call">call</option>
+                                        <option value="put">put</option>
+                                    </select>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-resultado">Resultado</label>
+                                    <select name="input-resultado" id="input-resultado">
+                                        <option value="todos">todos</option>
+                                        <option value="win">win</option>
+                                        <option value="loss">loss</option>
+                                        <option value="empate">empate</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type="button" id="btn-aplicar-filtros-principal" value="Filtrar" onclick="aplicar_filtros_principal();">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-results-base-geral">
+                            <table class="table-results-resume">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>expiração</th>
+                                        <th>mercado</th>
+                                        <th>ativo</th>
+                                        <th>direção</th>
+                                        <th>resultado</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="{% static 'scriptDashboard.js' %}"></script>
+                
+                <script>
+                    function aplicar_filtros_principal() {
+                        getDataDashboardPrincipal("{% url 'query_results_operations_get_data_dashboard' %}");
+                    }
+                    getDataDashboardPrincipal("{% url 'query_results_operations_get_data_dashboard' %}");
+                </script>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

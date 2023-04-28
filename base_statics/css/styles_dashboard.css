@@ -1,0 +1,83 @@
+.container-filtros-principal {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.container-filtros-principal input {
+    outline: none;
+}
+.container-filtros-principal form {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: antiquewhite;
+    box-shadow: var(--box-shadow-1);
+    border-radius: 5px;
+}
+
+.block-filtros-datas {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.contents-filtros-datas {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin: 3px 10px;
+    gap: 10px;
+}
+.contents-filtros-datas label,
+.contents-filtros-geral label {
+    font-weight: 600;
+}
+.contents-filtros-datas input {
+    width: 145px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.contents-filtros-geral {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin: 3px 10px;
+    gap: 10px;
+}
+.contents-filtros-geral select {
+    padding: 10px;
+    outline: none;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 5px;
+}
+#input-ativo {
+    text-align: start;
+}
+
+#btn-aplicar-filtros-principal {
+    width: 150px;
+    height: 45px;
+    border-radius: 5px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #FFF;
+    background-color: blue;
+    border: 1px solid #ffffff;
+}
+#btn-aplicar-filtros-principal:hover {
+    border-color: rgb(255, 255, 255);
+    border: 1px solid transparent;
+    transition: .4s;
+}

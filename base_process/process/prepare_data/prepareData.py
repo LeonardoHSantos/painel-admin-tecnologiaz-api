@@ -52,20 +52,23 @@ class PrepareData:
             if active_name in list_actives_open:
                 # for timeframe in lista_timeframes:
                 for estrategia in list_estrategias:
-                    list_requests.append(
-                        {
-                            "estrategia": estrategia,
-                            "active_name": actives_database["active_name"][idx_db],
-                            "active_id": actives_database["active_id"][idx_db],
-                            "timeframes": lista_timeframes,
-                            "amounts_sup_res": [
-                                actives_database[estrategia][idx_db],
-                                actives_database[f"{estrategia}_sup_res_m15"][idx_db],
-                                actives_database[f"{estrategia}_sup_res_1h"][idx_db],
-                                actives_database[f"{estrategia}_sup_res_4h"][idx_db]
-                            ],
-                        }
-                    )
+                    
+                    if int(["status_strategy"]) >= 1:
+                        # CHECAGEM DOS STATUS DA ESTRATEGIA - >= 1: analida | < 1: NÃO ANALISA
+                        list_requests.append(
+                            {
+                                "estrategia": estrategia,
+                                "active_name": actives_database["active_name"][idx_db],
+                                "active_id": actives_database["active_id"][idx_db],
+                                "timeframes": lista_timeframes,
+                                "amounts_sup_res": [
+                                    actives_database[estrategia][idx_db],
+                                    actives_database[f"{estrategia}_sup_res_m15"][idx_db],
+                                    actives_database[f"{estrategia}_sup_res_1h"][idx_db],
+                                    actives_database[f"{estrategia}_sup_res_4h"][idx_db]
+                                ],
+                            }
+                        )
         print(" *************************** LIST RQUESTS *************************** ")
         print(list_requests)
         for i in list_requests:

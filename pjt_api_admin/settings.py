@@ -14,8 +14,8 @@ SECRET_KEY = 'django-insecure-ze737o+kl69&a7m&=25pei!v5e3ap(x+q*$g+nwx$ts(lp!5n!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://144.22.243.38", "144.22.243.38", "http://127.0.0.1", "127.0.0.1", "localhost"]
-CSRF_TRUSTED_ORIGINS = ['http://144.22.243.38', 'http://127.0.0.1']
+ALLOWED_HOSTS = ["http://18.188.114.92", "18.188.114.92", "http://127.0.0.1", "127.0.0.1", "localhost"]
+CSRF_TRUSTED_ORIGINS = ['http://18.188.114.92', 'http://127.0.0.1']
 
 
 # Application definition
@@ -80,7 +80,7 @@ DATABASES = {
         'PASSWORD': config_auth.PASSWORD_DB,
         'NAME': config_auth.NAME_DB,
         'PORT': config_auth.PORT,
-    }
+    },
 }
 
 

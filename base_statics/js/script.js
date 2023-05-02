@@ -1,8 +1,7 @@
 console.log("script js carregado...");
 
 //
-function testeScroll(){
-    console.log("scroll ativar...")
+function moveDownScroll(){
     window.scrollBy(0, 2000); 
 }
 

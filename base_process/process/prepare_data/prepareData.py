@@ -53,8 +53,8 @@ class PrepareData:
                 # for timeframe in lista_timeframes:
                 for estrategia in list_estrategias:
                     
-                    if int(["status_strategy"]) >= 1:
-                        # CHECAGEM DOS STATUS DA ESTRATEGIA - >= 1: analida | < 1: NÃO ANALISA
+                    if int(actives_database[estrategia][idx_db]) >= 1:
+                        # CHECAGEM DOS STATUS DA ESTRATEGIA - >= 1: ANALISAR | < 1: NÃO ANALISA
                         list_requests.append(
                             {
                                 "estrategia": estrategia,

@@ -164,7 +164,7 @@ def home(request):
     if request.method == "GET":
         query = query_database_actives_all()
         print(query)
-        list_actives = query[0]
+        list_actives = query
         list_padroes = [""]
         # print(f"---------------->>> ACTIVES ALL: {list_actives}")
         context = {

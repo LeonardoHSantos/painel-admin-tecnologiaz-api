@@ -13,7 +13,7 @@ else if (link_actual.pathname.includes("autenticacao-iqoption")) {
 }
 // ----------------------------------------------------------------------------------------------
 let content_footer = document.querySelector(".content-footer");
-if (link_actual.pathname.includes("config-admin")) {
+if (link_actual.pathname.includes("config-admin") | link_actual.pathname.includes("/")) {
     content_footer.style.position = "relative";
 } else {
     content_footer.style.position = "fixed";

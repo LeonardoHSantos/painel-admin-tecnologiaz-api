@@ -10,6 +10,7 @@ def query_database_actives_all():
         conn = conn_db_producao()
         cursor = None
         list_actives = []
+        list_padroes = []
         if conn["status_conn_db"] == True:
             cursor = conn["conn"].cursor()
 
@@ -23,6 +24,7 @@ def query_database_actives_all():
                 for result in result_query:
                     _active_name = result[0]
                     list_actives.append(_active_name)
+                    
         
         cursor.close()
         conn["conn"].close()

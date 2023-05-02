@@ -36,6 +36,11 @@
                             </div>
                         </div>
                     </div>
+                    <div class="msg-error-form-register">
+                        {% if user_unavailable %}
+                            <p>Usuário ou senha inválidos.</p>
+                        {% endif %}
+                    </div>
                 </form>
             </div>
         </div>

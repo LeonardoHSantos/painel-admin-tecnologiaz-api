@@ -3,6 +3,9 @@
 {% block title %}Admin{% endblock %}
 {% block content %}
     <div class="content">
+        <div>
+            <p onclick="testeScroll();">Teste</p>
+        </div>
 
         <div class="content-msg-sucess-save">
         </div>
@@ -93,6 +96,48 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+    <div class="tabela-operacoes">
+        <h3>TABELA DE OPERAÇÕES - referência para as configurações das estratégias</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>estratégia</th>
+                    <th>quantidade de candles</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>estratégia M5 - padrão 1</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>estratégia M5 - padrão 2</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <td>estratégia M5 - padrão 3</td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td>estratégia M5 - padrão 4</td>
+                    <td>7</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="instrucoes-start-stop-api">
+        <div class="content-instrucoes">
+            <p> 1 - Para <span class="destaque-intrucao"> configurar as operações </span> da api é necessário filtrar a <span class="destaque-intrucao"> estratégia </span> e a <span class="destaque-intrucao"> paridade </span> desejada.</p>
+            <p> 2 - Após a seleção da estratégia e paridade, é liberado a função <span class="destaque-intrucao"> BUSCAR</span> no canto <span class="destaque-intrucao"> superior </span> do formulário. Clique para buscar as configurações.
+            <p> 3 - Em seguida é retornado as configurações da API para a paridade e estratégia filtrada.</p>
+            <p> 4 - Para <span class="destaque-intrucao"> DESATIVAR </span> as operações da paridade e estratégia filtrada basta informar no campo <span class="destaque-intrucao"> Qtd Candles M5 </span> a quantidade <span class="destaque-intrucao"> ZERO</span>.</p>
+            <p> 5 - Para <span class="destaque-intrucao"> ATIVAR </span> as operações da paridade e estratégia filtrada basta informar no campo <span class="destaque-intrucao"> Qtd Candles M5 </span> a quantidade prevista na tabela <span class="destaque-intrucao"> "TABELA DE OPERAÇÕES" </span>.</p>
+            <p> 6 - Após qualquer alteração no formulário de configuração, é habilitado o botão <span class="destaque-intrucao"> SALVAR </span>.</p>
+            <p> 7 - Lembre de seguir a tabela <span class="destaque-intrucao"> "TABELA DE OPERAÇÕES" </span> para garantir o funcionamento correto da API.</p>
+            <img src="{% static 'config-estrategias.gif' %}" alt="">
         </div>
     </div>
 

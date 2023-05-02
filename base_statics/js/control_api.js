@@ -39,9 +39,23 @@ function controlAPI(url_start_api, url_stop_api) {
         control_form_status = true;
     }
     
-    // console.log(`control_form_email: ${control_form_email}`);
-    // console.log(`control_form_password: ${control_form_password}`);
-    // console.log(`control_form_status: ${control_form_status}`);
+    // ---------------------------------------
+    if (control_form_email == false) {
+        username_iqoption.classList.add("border-erro-input");
+        username_iqoption.classList.remove("border-success-input");
+    } else {
+        username_iqoption.classList.add("border-success-input");
+        username_iqoption.classList.remove("border-erro-input");
+    }
+    // ---------------------------------------
+    if (control_form_password == false) {
+        password_iqoption.classList.add("border-erro-input");
+        password_iqoption.classList.remove("border-success-input");
+    } else {
+        password_iqoption.classList.add("border-success-input");
+        password_iqoption.classList.remove("border-erro-input");
+    }
+
     let body = {
         "status_api": status_api.value,
         "email": username_iqoption.value,
@@ -108,4 +122,23 @@ function alterSelectInputs(event) {
 function showInpuPassword(event){
     let inputs = document.querySelector(".inputs-credencials-user-iqoption-password");
     inputs.style.display = "flex";
+}
+
+// 
+function show_password(event) {
+    let icon_password = document.getElementById("password-iqoption");
+    let name_class = event.target.classList;
+    console.log(name_class);
+    console.log(name_class[1]);
+    console.log(icon_password);
+    if (name_class[1] == "fa-lock") {
+        icon_password.setAttribute("type", "text");
+        document.querySelector(".icons-password i").classList.add("fa-unlock");
+        document.querySelector(".icons-password i").classList.remove("fa-lock");
+    }
+    else if (name_class[1] == "fa-unlock") {
+        icon_password.setAttribute("type", "password");
+        document.querySelector(".icons-password i").classList.add("fa-lock");
+        document.querySelector(".icons-password i").classList.remove("fa-unlock");
+    }
 }

@@ -1,5 +1,13 @@
 console.log("script js carregado...");
 
+//
+function testeScroll(){
+    console.log("scroll ativar...")
+    window.scrollBy(0, 2000); 
+}
+
+
+
 function animation_btn_form(event) {
     document.getElementById(event.target.id).style.display = "none";
     document.querySelector(".content-animation-btn-form").style.display = "flex";

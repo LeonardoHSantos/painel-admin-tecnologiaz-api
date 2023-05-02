@@ -46,16 +46,27 @@
                         <div class="inputs-credencials-user-iqoption-password">
                             <label for="password-iqoption">Senha</label>
                             <input type="password" name="password-iqoption" id="password-iqoption" value="{{ password }}" placeholder="senha..." required>
+                            <div class="icons-password">
+                                <i class="fa-solid fa-lock" onclick="show_password(event);"></i>
+                            </div>
+                            <!-- <i class="fa-solid fa-unlock"></i> -->
                         </div>
                         <div class="alert-input-password">
                             <p>Para manter a segurança da sua conta IQ Option apenas o email será salvo no banco de dados.</p>
-
                         </div>
                     </div>
                     <div class="btn-control-api">
                         <input type="submit" value="Salvar" id="save-form-control-api" onclick="controlAPI_process();">
                     </div> 
                 </form>
+            </div>
+        </div>
+        <div class="instrucoes-start-stop-api ">
+            <div class="content-instrucoes">
+                <p> 1 - Para <span class="destaque-intrucao"> ativar </span> a API é necessário informar o <span class="destaque-intrucao"> usuário </span> e <span class="destaque-intrucao"> senha </span> da conta IQ Option (senha com no mínimo 5 caracteres).</p>
+                <p> 2 - Para <span class="destaque-intrucao"> desativar </span> a API basta informar o <span class="destaque-intrucao"> usuário </span> da conta IQ Option (é solicitado o preenchimento de qualquer senha para segurança da ação).</p>
+                <p> 3 - Aguarde e notificação no canto superior direito da tela com a confirmação da ação desejada.</p>
+                <img src="{% static 'start-stop-api.gif' %}" alt="">
             </div>
         </div>
     </div>

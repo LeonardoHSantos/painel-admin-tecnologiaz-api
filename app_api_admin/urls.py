@@ -13,4 +13,6 @@ urlpatterns = [
     path("config-admin-get/", views.config_admin_get, name="config_admin_get"),
     path("config-admin-post/", views.config_admin_post, name="config_admin_post"),
     path("query-results-operations-get-data-dashboard/", views.query_results_operations_get_data_dashboard, name="query_results_operations_get_data_dashboard"),
+
+    # path("instrucoes-painel/", views.instrucoes_painel, name="instrucoes_painel"),
 ]

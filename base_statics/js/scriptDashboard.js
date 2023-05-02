@@ -9,13 +9,17 @@ function getDataDashboardPrincipal(url) {
     let input_ativo = document.getElementById("input-ativo").value;
     let input_direcao = document.getElementById("input-direcao").value;
     let input_resultado = document.getElementById("input-resultado").value;
+    let input_estrategia = document.getElementById("input-estrategia").value;
+    let input_alerta = document.getElementById("input-alerta").value;
     let data = {
         "data_inicio": input_data_inicial,
         "data_fim": input_data_final,
         "mercado": input_mercado,
         "active": input_ativo,
         "direction": input_direcao,
-        "resultado": input_resultado
+        "resultado": input_resultado,
+        "padrao": input_estrategia,
+        "status_alert": input_alerta
     }
     console.log(data);
 
@@ -36,8 +40,10 @@ function getDataDashboardPrincipal(url) {
                     <td class="result-comum">${data_idx, data_results[data_idx]["expiration_alert"]}</td>
                     <td class="result-comum">${data_idx, data_results[data_idx]["mercado"]}</td>
                     <td class="result-comum">${data_idx, data_results[data_idx]["active"]}</td>
+                    <td class="result-comum">${data_idx, data_results[data_idx]["padrao"]}</td>
                     <td class="${data_idx, data_results[data_idx]["className_direction"]}">${data_idx, data_results[data_idx]["direction"]}</td>
                     <td class="${data_idx, data_results[data_idx]["class_name"]}">${data_idx, data_results[data_idx]["resultado"]}</td>
+                    <td class="result-comum">${data_idx, data_results[data_idx]["status_alert"]}</td>
                 </tr>
             `;
 

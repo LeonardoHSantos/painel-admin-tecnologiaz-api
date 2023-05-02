@@ -65,6 +65,97 @@
     text-align: start;
 }
 
+/* CARDS RESULTADOS */
+.block-resultados-resumo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+}
+.card-results {
+    margin: 10px;
+    width: 215px;
+    height: 75px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 12px;
+    padding: 10px;
+    color: #FFF;
+    background-color: var(--color-base-1);
+    box-shadow: var(--box-shadow-1);
+}
+.content-card-consolidado {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    gap: 0px;
+}
+.content-card-results-consolidado {
+    font-size: 27px;
+}
+
+
+.card-result-geral {
+    width: 74px;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid var(--color-white-1);
+}
+
+.card-result-geral-direction,
+.card-result-geral-direction-result {
+    width: 52px;
+    height: auto;
+    margin: 2px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 600;
+}
+.result-win-geral {
+    color: var(--color-dark-1);
+    background-color: #45fd02;
+}
+.result-loss-geral {
+    color: var(--color-white-1);
+    background-color: #fd0202;
+}
+.card-result-extrato {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 10px 0px;
+}
+.card-result-extrato p {
+    width: 62px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 600;
+}
+.card-result-extrato-win {
+    background-color: #45fd02;
+    color: var(--color-dark-1);
+    border-radius: 5px;
+}
+.card-result-extrato-loss {
+    background-color: #fd0202;
+    color: var(--color-white-1);
+    border-radius: 5px;
+}
+
 #btn-aplicar-filtros-principal {
     width: 150px;
     height: 45px;

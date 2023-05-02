@@ -54,10 +54,69 @@
                                         <option value="empate">empate</option>
                                     </select>
                                 </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-resultado">Padrão</label>
+                                    <select name="input-estrategia" id="input-estrategia">
+                                        <option value="todos">todos</option>
+                                        {% for padrao in list_padroes %}
+                                            <option value="{{ padrao }}">{{ padrao }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-resultado">Alerta</label>
+                                    <select name="input-alerta" id="input-alerta">
+                                        <option value="todos">todos</option>
+                                        {% for alerta in list_alertas %}
+                                            <option value="{{ alerta }}">{{ alerta }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                                 <div>
                                     <input type="button" id="btn-aplicar-filtros-principal" value="Filtrar" onclick="aplicar_filtros_principal();">
                                 </div>
                             </form>
+                        </div>
+                        <div class="block-resultados-resumo">
+                            <div class="card-results">
+                                <span class="content-card-consolidado">
+                                    <p>Registros</p>
+                                    <p class="content-card-results-consolidado">100</p>
+                                </span>
+                            </div>
+                            <div class="card-results">
+                                <span class="card-result-geral">
+                                    <p class="card-result-geral-direction result-win-geral">Call</p>
+                                    <p class="card-result-geral-direction-result">50</p>
+                                </span>
+                                <div>
+                                    <span class="card-result-extrato">
+                                        <p>Win</p>
+                                        <p class="card-result-extrato-win">25</p>
+                                    </span>
+                                    <span class="card-result-extrato">
+                                        <p>Loss</p>
+                                        <p class="card-result-extrato-loss">25</p>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-results">
+                                <span class="card-result-geral">
+                                    <p class="card-result-geral-direction result-loss-geral">Put</p>
+                                    <p class="card-result-geral-direction-result">50</p>
+                                </span>
+                                <div>
+                                    <span class="card-result-extrato">
+                                        <p>Win</p>
+                                        <p class="card-result-extrato-win">25</p>
+                                    </span>
+                                    <span class="card-result-extrato">
+                                        <p>Loss</p>
+                                        <p class="card-result-extrato-loss">25</p>
+                                    </span>
+                                </div>
+                            </div>
+                            
                         </div>
                         <div class="table-results-base-geral">
                             <table class="table-results-resume">
@@ -67,8 +126,10 @@
                                         <th>expiração</th>
                                         <th>mercado</th>
                                         <th>ativo</th>
+                                        <th>padrão</th>
                                         <th>direção</th>
                                         <th>resultado</th>
+                                        <th>alerta</th>
                                     </tr>
                                 </thead>
 

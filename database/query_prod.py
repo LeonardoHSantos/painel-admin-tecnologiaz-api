@@ -65,6 +65,7 @@ def query_database_prod_estrategia(string_query):
                             "direction": _direction,
                             "resultado": _resultado,
                             "expiration_alert": convert_datetime_to_string(_expiration_alert),
+                            "status_alert": _status_alert,
                             "class_name": className,
                             "className_direction": className_direction
                         }

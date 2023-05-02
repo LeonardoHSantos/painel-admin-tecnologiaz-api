@@ -7,19 +7,19 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from base_process.data_aux import var_aux
+from config_auth import LIST_PADROES, LIST_ALERTAS
 
 from base_process.process.api.process_api import ProcessAPI
 from base_process.process.expirations.expiration_candle import datetime_now
-from database.query_database import query_database_estrategia, update_database_estrategia, update_status_api, query_status_api, query_database_actives_all, query_database_results_calc
 from database.query_prod import query_database_prod_estrategia
+from database.query_database import query_database_estrategia, update_database_estrategia, update_status_api, query_status_api, query_database_actives_all, query_database_results_calc
 
 
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+
 CONTROL_API = None
-
-
 
 def query_results_operations(string_query):
     try:
@@ -132,15 +132,22 @@ def login_user_admin(request):
         print(get_user)
         return render(request, "app/login.html")
     if request.method == "POST":
-        email       = request.POST.get("email_user")
-        password    = request.POST.get("password_user")
-        get_user = User.objects.all()
-        # filter_user = User.objects.filter(email=email, password=password)
+        email       = request.POST.get("email_user") # email_user
+        password    = request.POST.get("password_user") # password_user
+        print(f"POST ------------------> {request.POST}")
+
+        
+        # get_user = User.objects.all()
+        filter_user = User.objects.filter(username=email)
+        # filter_email = User.objects.filter(email=email)
+        print(f"FILTER USER -------------->> {filter_user}")
+        
         _user = authenticate(username=email, passoword=password)
         if _user is None:
             context = {
                 "email": email,
-                "password": password
+                "password": password,
+                "user_unavailable": True
             }
             return render(request, "app/login.html", context=context)
         else:
@@ -155,10 +162,15 @@ def logout_user(request):
 def home(request):
     # print(f"USER ----------------> {str(request.user)}")
     if request.method == "GET":
-        list_actives = query_database_actives_all()
+        query = query_database_actives_all()
+        print(query)
+        list_actives = query[0]
+        list_padroes = [""]
         # print(f"---------------->>> ACTIVES ALL: {list_actives}")
         context = {
             "list_actives": list_actives,
+            "list_padroes": LIST_PADROES,
+            "list_alertas": LIST_ALERTAS,
         }
         return render(request, "app/home.html", context=context)
           
@@ -235,6 +247,7 @@ def start_api(request):
     status_api = data["status_api"]
     identifier = data["email"]
     password = data["password"]
+
     try:
         var_aux.CONTROL_STATUS_API = ProcessAPI(identifier=identifier, password=password)
         _start = var_aux.CONTROL_STATUS_API.start_api()
@@ -300,3 +313,6 @@ def config_admin_post(request):
     }
     data = update_database_estrategia(obj_update=obj_update, estrategia=input_select_estrategia, active_name=input_select_paridade)
     return JsonResponse(data)
+
+# def instrucoes_painel(request):
+#     return render(request, "app/instrucoes_painel.html")

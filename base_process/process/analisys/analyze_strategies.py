@@ -354,7 +354,8 @@ def estrategia_3(estrategia, dataframe, status_alert, padrao, version, active):
     
     print(f"\n\n -----> CONFLUÊNCIAS {active} | RESULTADO: {result_confluencias} | OBS: {observation}")
     
-    prepare_signal_to_database(dataframe, direction, status_alert, padrao, version, active, observation, result_confluencias)
+    prepare_signal_to_database(dataframe, direction, status_alert, padrao, version, active, observation, result_confluencias,
+                               sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h)
 
 # ----------------------------------------------------------------------
 def estrategia_4(estrategia, dataframe, status_alert, padrao, version, active):

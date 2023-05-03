@@ -193,6 +193,8 @@ def estrategia_1(estrategia, dataframe, status_alert, padrao, version, active):
     
     direction = "-"
     observation = "-"
+    # res_15m_extrato_tm
+    # sup_15m_extrato_tm
     if dataframe["status_candle"][id_5] == "baixa" and dataframe["status_candle"][id_4] == "alta" and dataframe["status_candle"][id_3] == "alta" and dataframe["status_candle"][id_2] == "baixa" and dataframe["status_candle"][id_1] == "baixa": # and df["status_candle"][id_2] == "alta":
         if dataframe["sup_15m_extrato_tm"][id_1] >= 2 and dataframe["sup_1h_extrato_tm"][id_1] >= 1 and  dataframe["sup_4h_extrato_tm"][id_1] >= 1:
             direction = "call"
@@ -201,7 +203,7 @@ def estrategia_1(estrategia, dataframe, status_alert, padrao, version, active):
             observation = "call - sem conf. sup res"
     
     elif dataframe["status_candle"][id_5] == "alta" and dataframe["status_candle"][id_4] == "baixa" and dataframe["status_candle"][id_3] == "baixa" and dataframe["status_candle"][id_2] == "alta" and dataframe["status_candle"][id_1] == "alta": # and df["status_candle"][id_2] == "alta":
-        if dataframe["sup_15m_extrato_tm"][id_1] >= 3 and dataframe["sup_1h_extrato_tm"][id_1] >= 1 and  dataframe["sup_4h_extrato_tm"][id_1] >= 1:
+        if dataframe["res_15m_extrato_tm"][id_1] >= 3 and dataframe["res_1h_extrato_tm"][id_1] >= 1 and  dataframe["res_4h_extrato_tm"][id_1] >= 1:
             direction = "put"
             result_confluencias = True
         else:
@@ -235,7 +237,7 @@ def estrategia_2(estrategia, dataframe, status_alert, padrao, version, active):
             observation = "call - sem conf. sup res"
 
     elif dataframe["status_candle"][id_7] == "alta" and dataframe["status_candle"][id_6] == "baixa" and dataframe["status_candle"][id_5] == "alta" and dataframe["status_candle"][id_4] == "alta" and dataframe["status_candle"][id_3] == "alta" and dataframe["status_candle"][id_2] == "alta":
-        if dataframe["sup_15m_extrato_tm"][id_1] >= 2 and dataframe["sup_1h_extrato_tm"][id_1] >= 1 and  dataframe["sup_4h_extrato_tm"][id_1] >= 1:
+        if dataframe["res_15m_extrato_tm"][id_1] >= 2 and dataframe["res_1h_extrato_tm"][id_1] >= 1 and  dataframe["res_4h_extrato_tm"][id_1] >= 1:
             direction = "put"
             result_confluencias = True
         else:
@@ -293,7 +295,7 @@ def estrategia_3(estrategia, dataframe, status_alert, padrao, version, active):
             id_2 = current_id -1
             id_1 = current_id -0
             if dataframe["status_candle"][id_3] == "baixa" and dataframe["status_candle"][id_2] == "alta" and dataframe["status_candle"][id_1] == "alta":
-                if dataframe["sup_15m_extrato_tm"][id_1] >= 2 and dataframe["sup_1h_extrato_tm"][id_1] >= 1 and  dataframe["sup_4h_extrato_tm"][id_1] >= 1:
+                if dataframe["res_15m_extrato_tm"][id_1] >= 2 and dataframe["res_1h_extrato_tm"][id_1] >= 1 and  dataframe["res_4h_extrato_tm"][id_1] >= 1:
                     direction = "put"
                 else:
                     observation_2 = "put - sem conf. sup res"
@@ -340,7 +342,7 @@ def estrategia_4(estrategia, dataframe, status_alert, padrao, version, active):
     direction = "-"
     observation = "-"
     if dataframe["status_candle"][id_7] == "baixa" and dataframe["status_candle"][id_6] == "alta" and dataframe["status_candle"][id_5] == "alta" and dataframe["status_candle"][id_3] == "baixa":
-        if dataframe["sup_15m_extrato_tm"][id_1] >= 2 and dataframe["sup_1h_extrato_tm"][id_1] >= 1 and  dataframe["sup_4h_extrato_tm"][id_1] >= 1:
+        if dataframe["res_15m_extrato_tm"][id_1] >= 2 and dataframe["res_1h_extrato_tm"][id_1] >= 1 and  dataframe["res_4h_extrato_tm"][id_1] >= 1:
             direction = "put"
             result_confluencias = True
         else:

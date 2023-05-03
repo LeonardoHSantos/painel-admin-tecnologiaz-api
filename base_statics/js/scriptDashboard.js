@@ -37,13 +37,20 @@ function getDataDashboardPrincipal(url) {
             table_results.innerHTML += `
                 <tr>
                     <td class="result-comum">${data_idx}</td>
-                    <td class="result-comum">${data_idx, data_results[data_idx]["expiration_alert"]}</td>
-                    <td class="result-comum">${data_idx, data_results[data_idx]["mercado"]}</td>
-                    <td class="result-comum">${data_idx, data_results[data_idx]["active"]}</td>
-                    <td class="result-comum">${data_idx, data_results[data_idx]["padrao"]}</td>
-                    <td class="${data_idx, data_results[data_idx]["className_direction"]}">${data_idx, data_results[data_idx]["direction"]}</td>
-                    <td class="${data_idx, data_results[data_idx]["class_name"]}">${data_idx, data_results[data_idx]["resultado"]}</td>
-                    <td class="result-comum">${data_idx, data_results[data_idx]["status_alert"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["expiration_alert"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["padrao"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["status_alert"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["mercado"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["active"]}</td>
+                    <td class="${data_results[data_idx]["className_direction"]}">${data_results[data_idx]["direction"]}</td>
+                    <td class="${data_results[data_idx]["class_name"]}">${data_results[data_idx]["resultado"]}</td>
+
+                    <td class="result-comum">${data_results[data_idx]["sup_m15"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["sup_1h"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["sup_4h"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["res_m15"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["res_1h"]}</td>
+                    <td class="result-comum">${data_results[data_idx]["res_4h"]}</td>
                 </tr>
             `;
 

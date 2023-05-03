@@ -562,7 +562,7 @@ ul li a {
     height: 408px;
 }
 .table-results-base-geral {
-    width: 1200px;
+    width: 100% !important;
     height: 450px;
 }
 .table-results-base, .table-results-base-geral {

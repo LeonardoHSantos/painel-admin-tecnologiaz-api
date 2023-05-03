@@ -15,7 +15,8 @@ def query_database_prod_estrategia(string_query):
                 SELECT
                     id, mercado, active, padrao, direction, resultado, status_alert,
                     alert_datetime, expiration_alert, alert_time_update,
-                    name_strategy
+                    name_strategy,
+                    sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h
                  from
                     {TABLE_NAME_OPERATIONS}
                 {string_query}
@@ -43,6 +44,13 @@ def query_database_prod_estrategia(string_query):
                     _expiration_alert   = registro[8]
                     _alert_time_update  = registro[9]
                     _name_strategy      = registro[10]
+                    # --------------------------------
+                    _sup_m15            = registro[11]
+                    _sup_1h             = registro[12]
+                    _sup_4h             = registro[13]
+                    _res_m15            = registro[14]
+                    _res_1h             = registro[15]
+                    _res_4h             = registro[16]
 
                     className = "result-empate"
                     if _resultado == "win":
@@ -67,7 +75,13 @@ def query_database_prod_estrategia(string_query):
                             "expiration_alert": convert_datetime_to_string(_expiration_alert),
                             "status_alert": _status_alert,
                             "class_name": className,
-                            "className_direction": className_direction
+                            "className_direction": className_direction,
+                            "sup_m15": _sup_m15,
+                            "sup_1h": _sup_1h,
+                            "sup_4h": _sup_4h,
+                            "res_m15": _res_m15,
+                            "res_1h": _res_1h,
+                            "res_4h": _res_4h
                         }
                     }
                     # print(data)

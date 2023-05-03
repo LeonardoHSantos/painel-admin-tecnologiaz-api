@@ -310,6 +310,12 @@ def update_database_sign(obj_sign):
     active = obj_sign["active"]
     direction = obj_sign["direction"]
     name_strategy = obj_sign["name_strategy"]
+    sup_m15 = obj_sign["sup_m15"]
+    sup_1h  = obj_sign["sup_1h"]
+    sup_4h  = obj_sign["sup_4h"]
+    res_m15 = obj_sign["res_m15"]
+    res_1h  = obj_sign["res_1h"]
+    res_4h  = obj_sign["res_4h"]
     # ---
 
     if status_alert != "alert-open-operation" and status_alert != "canceled":
@@ -351,7 +357,13 @@ def update_database_sign(obj_sign):
                     alert_time_update = "{alert_time_update}",
                     status_alert = "{status_alert}",
                     obs_analysis = "{observation}",
-                    resultado = "{resultado}"
+                    resultado = "{resultado}",
+                    sup_m15 = {sup_m15},
+                    sup_1h = {sup_1h},
+                    sup_4h = {sup_4h},
+                    res_m15 = {res_m15},
+                    res_1h = {res_1h},
+                    res_4h = {res_4h}
                 WHERE
                     id >= {id_register};
                 """
@@ -368,14 +380,16 @@ def update_database_sign(obj_sign):
                                 obs_analysis,
                                 open_time, alert_datetime, expiration_alert, expiration_alert_timestamp, alert_time_update,
                                 resultado, status_alert, padrao,
-                                mercado, active, direction, name_strategy
+                                mercado, active, direction, name_strategy,
+                                sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h
                             )
                         VALUES
                             (
                                 "{observation}",
                                 "{open_time}", "{alert_datetime}", "{expiration_alert}", "{expiration_alert_timestamp}", "{alert_time_update}",
                                 "{resultado}", "{status_alert}", "{padrao}",
-                                "{mercado}", "{active}", "{direction}", "{name_strategy}"
+                                "{mercado}", "{active}", "{direction}", "{name_strategy}",
+                                {sup_m15}, {sup_1h}, {sup_4h}, {res_m15}, {res_1h}, {res_4h}
                             )
                     '''
                     cursor.execute(comando_insert_alert)

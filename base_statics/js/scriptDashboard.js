@@ -29,6 +29,23 @@ function getDataDashboardPrincipal(url) {
     }).then((data)=>{
         return data.json();
     }).then((data)=> {
+        console.log(`resultados aqui: `, data);
+        document.querySelector(".content-card-results-consolidado").textContent = data["resume_results"]["tt_query"];
+        
+        document.querySelector(".card-result-geral-direction-result-call").textContent = data["resume_results"]["tt_call"];
+        document.querySelector(".card-result-geral-direction-result-put").textContent = data["resume_results"]["tt_put"];
+        
+        document.querySelector(".content-card-results-consolidado-win").textContent = data["resume_results"]["tt_win"];
+        document.querySelector(".content-card-results-consolidado-loss").textContent = data["resume_results"]["tt_loss"];
+        
+        // call
+        document.querySelector(".card-result-extrato-win-call").textContent = data["resume_results"]["tt_win_call"];
+        document.querySelector(".card-result-extrato-loss-call").textContent = data["resume_results"]["tt_loss_call"];
+        // put
+        document.querySelector(".card-result-extrato-win-put").textContent = data["resume_results"]["tt_win_put"];
+        document.querySelector(".card-result-extrato-loss-put").textContent = data["resume_results"]["tt_loss_put"];
+        
+        // ------------------------- CREATE TABLE RESULTS -------------------------
         let data_results = JSON.parse(data["data"]);
         document.querySelector(".table-results-resume tbody").remove()
         document.querySelector(".table-results-resume").innerHTML += `<tbody></tbody>`;
@@ -37,7 +54,20 @@ function getDataDashboardPrincipal(url) {
             table_results.innerHTML += `
                 <tr>
                     <td class="result-comum">${data_idx}</td>
-                    <td class="result-comum">${data_results[data_idx]["expiration_alert"]}</td>
+
+                    <td class="result-comum resume-operation">
+                        ${data_results[data_idx]["expiration_alert"]}
+                        <span class="resume-operation-alert">
+                            <p class="destaque-expiration">${data_results[data_idx]["expiration_alert"]}</p>
+                            <div class="content-destaque-expirations">
+                                <p>início:</p> <p> ${data_results[data_idx]["alert_datetime"]}</p>
+                            </div>
+                            <div class="content-destaque-expirations">
+                                <p>confir.:</p> <p> ${data_results[data_idx]["alert_time_update"]}</p>
+                            </div>
+                        </span>
+                    </td>
+
                     <td class="result-comum">${data_results[data_idx]["padrao"]}</td>
                     <td class="result-comum">${data_results[data_idx]["status_alert"]}</td>
                     <td class="result-comum">${data_results[data_idx]["mercado"]}</td>

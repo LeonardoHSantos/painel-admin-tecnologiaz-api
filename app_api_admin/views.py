@@ -69,7 +69,7 @@ def query_results_operations_get_data_dashboard(request):
         try:
             data = query_results_operations(string_query=string_query)
             # print(f"DATA RESULT -------------> {data}")
-            return JsonResponse({"code": 200, "data": json.dumps(data)})
+            return JsonResponse({"code": 200, "data": json.dumps(data[0]), "resume_results": data[1]})
         except Exception as e:
             print(e)
             return JsonResponse({"code": 400})

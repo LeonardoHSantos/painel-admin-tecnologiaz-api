@@ -25,7 +25,7 @@ class WS_Client:
     def on_message(self, message):
         message = PrepareData.convert_data_to_json(message)
         self.status_msg = True
-        print(message["name"])
+        # print(message["name"])
         if message["name"] == "timeSync":
             self.check_timestamp = message["msg"]
         

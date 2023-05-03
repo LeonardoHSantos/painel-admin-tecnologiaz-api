@@ -8,6 +8,7 @@ def query_database_prod_estrategia(string_query):
         conn = conn_db_producao()
         cursor = None
         dict_results = dict()
+        resume_results = None
         if conn["status_conn_db"] == True:
             cursor = conn["conn"].cursor()
 
@@ -31,6 +32,14 @@ def query_database_prod_estrategia(string_query):
             # print(result_query)
             print(f"TT QUERY PROD: {tt_query}")
             print("FIM PROD -----------------------")
+            tt_call = 0
+            tt_put = 0
+            list_results = []
+            tt_win_call = 0
+            tt_loss_call = 0
+            tt_win_put = 0
+            tt_loss_put = 0
+
             if tt_query >= 1:
                 for registro in result_query:
                     _id                 = registro[0]
@@ -52,17 +61,35 @@ def query_database_prod_estrategia(string_query):
                     _res_1h             = registro[15]
                     _res_4h             = registro[16]
 
+                    _result_temp = None
                     className = "result-empate"
                     if _resultado == "win":
+                        _result_temp = "win"
                         className = "result-win"
+                    # ------------------------------
                     elif _resultado == "loss":
+                        _result_temp = "loss"
                         className = "result-loss"
-
+                   
                     className_direction = "direction-comum"
                     if _direction == "call":
+                        tt_call = tt_call + 1
                         className_direction = "direction-call"
+                        if _result_temp == "win":
+                            tt_win_call = tt_win_call + 1
+                        elif _result_temp == "loss":
+                            tt_loss_call = tt_loss_call + 1
+                    # -----------------------------------------
                     elif _direction == "put":
+                        tt_put = tt_put + 1
                         className_direction = "direction-put"
+                        if _result_temp == "win":
+                            tt_win_put = tt_win_put + 1
+                        elif _result_temp == "loss":
+                            tt_loss_put = tt_loss_put + 1
+                    
+                    
+                        
                     
                     data = {
                         f"{_id}": {
@@ -81,11 +108,27 @@ def query_database_prod_estrategia(string_query):
                             "sup_4h": _sup_4h,
                             "res_m15": _res_m15,
                             "res_1h": _res_1h,
-                            "res_4h": _res_4h
+                            "res_4h": _res_4h,
+                            "alert_datetime": convert_datetime_to_string(_alert_datetime),
+                            "alert_time_update": convert_datetime_to_string(_alert_time_update),
                         }
                     }
                     # print(data)
                     dict_results.update(data)
+                resume_results = {
+                    "tt_query": int(tt_query),
+                    "tt_call": tt_call,
+                    "tt_put": tt_put,
+                    "tt_win": tt_win_call + tt_win_put,
+                    "tt_loss": tt_loss_call + tt_loss_put,
+
+                    "tt_win_call": tt_win_call,
+                    "tt_loss_call": tt_loss_call,
+
+                    "tt_win_put": tt_win_put,
+                    "tt_loss_put": tt_loss_put,
+                }
+                
                     # print(f"_id: {_id} | _mercado: {_mercado} | _active: {_active} | _padrao: {_padrao} | _direction: {_direction} | _resultado: {_resultado} | _expiration_alert: {_expiration_alert}")
         try:
             cursor.close()
@@ -93,6 +136,6 @@ def query_database_prod_estrategia(string_query):
             print(" DB - DESCONECTADO ")
         except Exception as e:
             print(f"ERROR QUERY 1 | ERROR: {e}")
-        return dict_results
+        return dict_results, resume_results
     except Exception as e:
         print(f"ERROR QUERY 2 | ERROR: {e}")

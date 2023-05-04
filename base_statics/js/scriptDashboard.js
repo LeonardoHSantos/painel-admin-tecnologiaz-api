@@ -1,7 +1,7 @@
-console.log("scriptDashboard.js carregado...");
+// console.log("scriptDashboard.js carregado...");
 
 function getDataDashboardPrincipal(url) {
-    console.log("getDataDashboardPrincipal acionado...");
+    // console.log("getDataDashboardPrincipal acionado...");
 
     let input_data_inicial = document.getElementById("input-data-inicial").value;
     let input_data_final = document.getElementById("input-data-final").value;
@@ -21,7 +21,7 @@ function getDataDashboardPrincipal(url) {
         "padrao": input_estrategia,
         "status_alert": input_alerta
     }
-    console.log(data);
+    // console.log(data);
 
     fetch(url, {
         method: "POST",
@@ -29,7 +29,7 @@ function getDataDashboardPrincipal(url) {
     }).then((data)=>{
         return data.json();
     }).then((data)=> {
-        console.log(`resultados aqui: `, data);
+        // console.log(`resultados aqui: `, data);
         document.querySelector(".content-card-results-consolidado").textContent = data["resume_results"]["tt_query"];
         
         document.querySelector(".card-result-geral-direction-result-call").textContent = data["resume_results"]["tt_call"];
@@ -50,14 +50,16 @@ function getDataDashboardPrincipal(url) {
         document.querySelector(".table-results-resume tbody").remove()
         document.querySelector(".table-results-resume").innerHTML += `<tbody></tbody>`;
         let table_results = document.querySelector(".table-results-resume tbody");
+        let cont = 0;
         for (let data_idx in data_results) {
             table_results.innerHTML += `
                 <tr>
                     <td class="result-comum">${data_idx}</td>
 
                     <td class="result-comum resume-operation">
-                        ${data_results[data_idx]["expiration_alert"]}
-                        <span class="resume-operation-alert">
+                        <p class="result-data-${cont}" onmouseover="MouseMoveOver(event);" onmouseout="MouseMoveOut(event);">${data_results[data_idx]["expiration_alert"]}</p>
+                        
+                        <span class="resume-operation-alert result-${cont}">
                             <p class="destaque-expiration">${data_results[data_idx]["expiration_alert"]}</p>
                             <div class="content-destaque-expirations">
                                 <p>início:</p> <p> ${data_results[data_idx]["alert_datetime"]}</p>
@@ -83,7 +85,25 @@ function getDataDashboardPrincipal(url) {
                     <td class="result-comum">${data_results[data_idx]["res_4h"]}</td>
                 </tr>
             `;
+            cont = cont +1;
 
         }
     })
+}
+
+function MouseMoveOver(event) {
+    let classNameTarget = event.target.className.split("-");
+    let classNameEdit = classNameTarget[0] + "-" + classNameTarget[2];
+    const x = event.clientX;
+    const y = event.clientY;
+    document.querySelector(`.${classNameEdit}`).style.display = "flex";
+    document.querySelector(`.${classNameEdit}`).style.top = `${y-60}px`;
+}
+function MouseMoveOut(event) {
+    let classNameTarget = event.target.className.split("-");
+    let classNameEdit = classNameTarget[0] + "-" + classNameTarget[2];
+    const x = event.clientX;
+    const y = event.clientY;
+    document.querySelector(`.${classNameEdit}`).style.display = "none";
+    // document.querySelector(".resume-operation-alert ").style.display = "none";
 }

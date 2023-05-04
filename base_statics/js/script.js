@@ -1,4 +1,4 @@
-console.log("script js carregado...");
+// console.log("script js carregado...");
 
 //
 function moveDownScroll(){

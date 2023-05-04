@@ -197,13 +197,13 @@
 /* .resume-operation-alert {
     cursor: default;
 } */
-.resume-operation:hover .resume-operation-alert {
+/* .resume-operation:hover .resume-operation-alert {
     display: flex;
-}
+} */
 .resume-operation-alert {
     position: absolute;
     width: 250px;
-    margin-top: -67px;
+    /* margin-top: -67px; */
     margin-left: 200px;
     display: none;
     flex-direction: column;

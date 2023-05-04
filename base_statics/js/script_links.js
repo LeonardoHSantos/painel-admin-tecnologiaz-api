@@ -1,4 +1,4 @@
-console.log("script_links.js carregados...")
+// console.log("script_links.js carregados...");
 
 let link_actual = window.location;
 let nameClassAux = null;

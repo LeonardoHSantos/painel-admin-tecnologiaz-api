@@ -229,6 +229,7 @@ def config_admin_post(request):
     return JsonResponse(data)
 # -------------------
 @csrf_exempt
+@login_required(login_url="login_admin")
 def visao_geral_config(request):
     if request.method == "GET":
         

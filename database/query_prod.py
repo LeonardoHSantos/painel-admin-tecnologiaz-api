@@ -1,6 +1,6 @@
 from database.conn import conn_db_producao
 from base_process.process.expirations.expiration_candle import datetime_now, convert_datetime_to_string
-from config_auth import TABLE_NAME_OPERATIONS
+from config_auth import TABLE_NAME_OPERATIONS, TABLE_NAME_ESTRATEGIAS
 
 # def query_database_prod_estrategia(data_inicio, data_fim):
 def query_database_prod_estrategia(string_query):
@@ -139,3 +139,43 @@ def query_database_prod_estrategia(string_query):
         return dict_results, resume_results
     except Exception as e:
         print(f"ERROR QUERY 2 | ERROR: {e}")
+
+def edit_registro_visao_geral(body):
+    estrategia =    body["estrategia"]
+    active_name =   body["active_name"]
+    candles_M5 =    int(body["candles_M5"])
+    sup_res_M15 =   int(body["sup_res_M15"])
+    sup_res_1H =    int(body["sup_res_1H"])
+    sup_res_4H =    int(body["sup_res_4H"])
+    try:
+        conn = conn_db_producao()
+        cursor = None
+        if conn["status_conn_db"] == True:
+            cursor = conn["conn"].cursor()
+
+            comando_update = f"""
+            UPDATE {TABLE_NAME_ESTRATEGIAS}
+                SET
+                    {estrategia} = {candles_M5},
+                    {estrategia}_sup_res_m15 = {sup_res_M15},
+                    {estrategia}_sup_res_1h = {sup_res_1H},
+                    {estrategia}_sup_res_4h = {sup_res_4H}
+                WHERE
+                    active_name = "{active_name}" and
+                    id >= 1;
+            """
+            cursor.execute(comando_update)
+            conn["conn"].commit()
+            print(comando_update)
+
+        try:
+            cursor.close()
+            conn["conn"].close()
+            print(" DB - DESCONECTADO ")
+            return {"status_update": True}
+        except Exception as e:
+            print(f"ERROR UPDATE - VISÃO GERAL | ERROR: {e}")
+            return {"status_update": False}
+    except Exception as e:
+        print(f"ERROR UPDATE 2 - VISÃO GERAL | ERROR: {e}")
+        return {"status_update": False}

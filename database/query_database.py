@@ -165,6 +165,7 @@ def update_database_estrategia(obj_update, estrategia, active_name):
         print(f"ERROR UPDATE 2 | ERROR: {e}")
 # ------------------------------------------------------------------------------ API
 def query_database_api():
+    """ QUERY para criar lista de requisições ao servidor websocket da IQ Option. """
     try:
         conn = conn_db_producao()
         cursor = None
@@ -231,9 +232,81 @@ def query_database_api():
                     print(" DB - DESCONECTADO ")
                 except Exception as e:
                     print(f"ERROR QUERY REQUEST 1 | ERROR: {e}")
+                    return {"status_query": False}
                 return PrepareData.create_dataframe_request(list_requests)
             else:
                 return {"status_query": False}
+
+    except Exception as e:
+        print(f"ERROR QUERY REQUEST 2 | ERROR: {e}")
+# ------------------------------------------------------------------------------ API
+def query_visao_geral_config_database_api():
+    """ QUERY para página de visão geral das configurações da API. """
+    obj_estrategia_1 = dict()
+    obj_estrategia_2 = dict()
+    obj_estrategia_3 = dict()
+    obj_estrategia_4 = dict()
+    try:
+        conn = conn_db_producao()
+        cursor = None
+        if conn["status_conn_db"] == True:
+            cursor = conn["conn"].cursor()
+
+            comando_query = f'''
+                SELECT * from {TABLE_NAME_ESTRATEGIAS} ORDER BY active_name
+                '''
+            cursor.execute(comando_query)
+            result_query    = cursor.fetchall()
+            print("\n\n----------------------- result query ")
+            print(result_query)
+            print("-----------------------")
+            tt_query = len(result_query)
+            print(tt_query)
+
+            for registro in result_query:
+                obj_estrategia_1.update({registro[1]: {
+                    "candles_M5": registro[3],
+                    "sup_res_M15": registro[4],
+                    "sup_res_1H": registro[5],
+                    "sup_res_4H": registro[6],
+                    }
+                })
+                obj_estrategia_2.update({registro[1]: {
+                    "candles_M5": registro[7],
+                    "sup_res_M15": registro[8],
+                    "sup_res_1H": registro[9],
+                    "sup_res_4H": registro[10],
+                    }
+                })
+                obj_estrategia_3.update({registro[1]: {
+                    "candles_M5": registro[11],
+                    "sup_res_M15": registro[12],
+                    "sup_res_1H": registro[13],
+                    "sup_res_4H": registro[14],
+                    }
+                })
+                obj_estrategia_4.update({registro[1]: {
+                    "candles_M5": registro[15],
+                    "sup_res_M15": registro[16],
+                    "sup_res_1H": registro[17],
+                    "sup_res_4H": registro[18],
+                    }
+                })
+            
+            
+            try:
+                cursor.close()
+                conn["conn"].close()
+                print(" DB - DESCONECTADO ")
+            except Exception as e:
+                print(f"ERROR QUERY REQUEST 1 | ERROR: {e}")
+            return {
+                "obj_estrategia_1": obj_estrategia_1,
+                "obj_estrategia_2": obj_estrategia_2,
+                "obj_estrategia_3": obj_estrategia_3,
+                "obj_estrategia_4": obj_estrategia_4,
+            }
+           
 
     except Exception as e:
         print(f"ERROR QUERY REQUEST 2 | ERROR: {e}")

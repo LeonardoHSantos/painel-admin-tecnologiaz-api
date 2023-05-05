@@ -11,8 +11,8 @@ from config_auth import LIST_PADROES, LIST_ALERTAS
 
 from base_process.process.api.process_api import ProcessAPI
 from base_process.process.expirations.expiration_candle import datetime_now
-from database.query_prod import query_database_prod_estrategia
-from database.query_database import query_database_estrategia, update_database_estrategia, update_status_api, query_status_api, query_database_actives_all, query_database_results_calc
+from database.query_prod import query_database_prod_estrategia, edit_registro_visao_geral
+from database.query_database import query_database_estrategia, update_database_estrategia, update_status_api, query_status_api, query_database_actives_all, query_database_results_calc, query_visao_geral_config_database_api
 
 
 from django.http import JsonResponse
@@ -27,7 +27,7 @@ def query_results_operations(string_query):
     except Exception as e:
         print(e)
         return False
-    
+# -------------------
 @csrf_exempt
 def query_results_operations_get_data_dashboard(request):
     data_inicio = None
@@ -73,7 +73,7 @@ def query_results_operations_get_data_dashboard(request):
         except Exception as e:
             print(e)
             return JsonResponse({"code": 400})
-
+# -------------------
 def register_user_admin(request):
     if request.method == "GET":
         get_user = User.objects.all()
@@ -125,7 +125,7 @@ def register_user_admin(request):
         User.objects.create_user(username=username, email=email, password=password)
         print("\n\n ************************** Conta Criada Com Sucesso!!! **************************")
         return redirect("login_admin")
-
+# -------------------
 def login_user_admin(request):
     if request.method == "GET":
         get_user = User.objects.all()
@@ -172,8 +172,7 @@ def home(request):
             "list_padroes": LIST_PADROES,
             "list_alertas": LIST_ALERTAS,
         }
-        return render(request, "app/home.html", context=context)
-          
+        return render(request, "app/home.html", context=context)      
 # -------------------
 @login_required(login_url="login_admin")
 def config_admin(request):
@@ -190,6 +189,73 @@ def config_admin(request):
         "list_actives": list_actives,
     }
     return render(request, "app/config_admin.html", context)
+# -------------------
+@csrf_exempt
+def config_admin_get(request):
+    data = json.loads(request.body)
+    # print(data)
+    input_select_estrategia = data["input_select_estrategia"]
+    input_select_paridade = data["input_select_paridade"]
+    # print(f"input_select_estrategia: {input_select_estrategia}")
+    # print(f"input_select_paridade: {input_select_paridade}")
+
+    data = query_database_estrategia(estrategia=input_select_estrategia, active_name=input_select_paridade)
+    # print(f"GET DATA: {data}")
+    query_results = query_database_results_calc(active_name=input_select_paridade, strategy_name=input_select_estrategia)
+    print(f"\n\n\n---------------------------->>>>RESULTS: {query_results}")
+    return JsonResponse({"data":data, "query_results": json.dumps(query_results)})
+# -------------------
+@csrf_exempt
+def config_admin_post(request):
+    data = json.loads(request.body)
+    # print(data)
+
+    input_select_estrategia = data["input_select_estrategia"]
+    input_select_paridade = data["input_select_paridade"]
+    input_sup_res_m15 = data["input_sup_res_m15"]
+    input_sup_res_1h = data["input_sup_res_1h"]
+    input_sup_res_4h = data["input_sup_res_4h"]
+    input_status_estrategia = data["input_status_estrategia"]
+    input_candles_estrategia = data["input_qtd_candles_estrategia"]
+
+    obj_update = {
+        "input_sup_res_m15": int(input_sup_res_m15),
+        "input_sup_res_1h": int(input_sup_res_1h),
+        "input_sup_res_4h": int(input_sup_res_4h),
+        "input_status_estrategia": int(input_status_estrategia),
+        "input_candles_estrategia": int(input_candles_estrategia),
+    }
+    data = update_database_estrategia(obj_update=obj_update, estrategia=input_select_estrategia, active_name=input_select_paridade)
+    return JsonResponse(data)
+# -------------------
+@csrf_exempt
+def visao_geral_config(request):
+    if request.method == "GET":
+        
+        return render(request, "app/config_visao_geral.html")
+    elif request.method == "POST":
+        body = json.loads(request.body)
+        estrategia = body["estrategia"]
+        print(f"\n\n\n-------------------------> BODY POST: {estrategia}")
+        base_config = query_visao_geral_config_database_api()
+        context = {
+            "estrategia": estrategia,
+            "obj_estrategia_1": base_config["obj_estrategia_1"],
+            "obj_estrategia_2": base_config["obj_estrategia_2"],
+            "obj_estrategia_3": base_config["obj_estrategia_3"],
+            "obj_estrategia_4": base_config["obj_estrategia_4"],  
+        }
+        return JsonResponse(context)
+# -------------------
+@csrf_exempt
+def edit_visao_geral_config(request):
+    body = json.loads(request.body)
+    print(body)
+    edit = edit_registro_visao_geral(body)
+    return JsonResponse(edit)
+
+
+
 # -------------------
 @login_required(login_url="login_admin")
 def autenticao_iqoption(request):
@@ -275,44 +341,5 @@ def stop_api(request):
     except Exception as e:
         print(f"ERROR STOP API | ERROR: {e}")
         return JsonResponse({"code": 500, "status_api": str(e).replace("'", ""), "control_api": 0})
-# -------------------
-@csrf_exempt
-def config_admin_get(request):
-    data = json.loads(request.body)
-    # print(data)
-    input_select_estrategia = data["input_select_estrategia"]
-    input_select_paridade = data["input_select_paridade"]
-    # print(f"input_select_estrategia: {input_select_estrategia}")
-    # print(f"input_select_paridade: {input_select_paridade}")
-
-    data = query_database_estrategia(estrategia=input_select_estrategia, active_name=input_select_paridade)
-    # print(f"GET DATA: {data}")
-    query_results = query_database_results_calc(active_name=input_select_paridade, strategy_name=input_select_estrategia)
-    print(f"\n\n\n---------------------------->>>>RESULTS: {query_results}")
-    return JsonResponse({"data":data, "query_results": json.dumps(query_results)})
-# -------------------
-@csrf_exempt
-def config_admin_post(request):
-    data = json.loads(request.body)
-    # print(data)
-
-    input_select_estrategia = data["input_select_estrategia"]
-    input_select_paridade = data["input_select_paridade"]
-    input_sup_res_m15 = data["input_sup_res_m15"]
-    input_sup_res_1h = data["input_sup_res_1h"]
-    input_sup_res_4h = data["input_sup_res_4h"]
-    input_status_estrategia = data["input_status_estrategia"]
-    input_candles_estrategia = data["input_qtd_candles_estrategia"]
-
-    obj_update = {
-        "input_sup_res_m15": int(input_sup_res_m15),
-        "input_sup_res_1h": int(input_sup_res_1h),
-        "input_sup_res_4h": int(input_sup_res_4h),
-        "input_status_estrategia": int(input_status_estrategia),
-        "input_candles_estrategia": int(input_candles_estrategia),
-    }
-    data = update_database_estrategia(obj_update=obj_update, estrategia=input_select_estrategia, active_name=input_select_paridade)
-    return JsonResponse(data)
-
 # def instrucoes_painel(request):
 #     return render(request, "app/instrucoes_painel.html")

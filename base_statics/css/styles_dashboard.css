@@ -173,7 +173,8 @@
 }
 
 
-#btn-aplicar-filtros-principal {
+#btn-aplicar-filtros-principal,
+#btn-gerar-pre-analise {
     width: 150px;
     height: 45px;
     border-radius: 5px;
@@ -184,7 +185,11 @@
     background-color: blue;
     border: 1px solid #ffffff;
 }
-#btn-aplicar-filtros-principal:hover {
+#btn-gerar-pre-analise {
+    width: 170px;
+}
+#btn-aplicar-filtros-principal:hover,
+#btn-gerar-pre-analise:hover {
     border-color: rgb(255, 255, 255);
     border: 1px solid transparent;
     transition: .4s;

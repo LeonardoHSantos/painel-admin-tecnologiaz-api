@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block title %}Pré-Análise{% endblock %}
+{% load static %}
+{% block content %}
+    <div class="content">
+        <div class="form-login">
+
+            {% if user.is_authenticated %}
+                <div>
+                    <div class="content-form-home">
+                        <div class="container-filtros-principal">
+                            <form action="" id="form-filtros-principal">
+                                <div class="block-filtros-datas">
+                                    <div class="contents-filtros-datas">
+                                        <label for="input-data-inicial">Data inicial</label>
+                                        <input type="date" name="input-data-inicial" id="input-data-inicial">
+                                    </div>
+                                    <div class="contents-filtros-datas">
+                                        <label for="input-data-final">Data Final</label>
+                                        <input type="date" name="input-data-final" id="input-data-final">
+                                    </div>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-mercado">Mercado</label>
+                                    <select name="input-mercado" id="input-mercado">
+                                        <option value="todos">todos</option>
+                                        <option value="aberto">aberto</option>
+                                        <option value="otc">otc</option>
+                                    </select>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-ativo">Ativo</label>
+                                    <select name="input-ativo" id="input-ativo">
+                                        <option value="todos">todos</option>
+                                        {% for active in list_actives %}
+                                            <option value="{{ active }}">{{ active }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-direcao">Direção</label>
+                                    <select name="input-direcao" id="input-direcao">
+                                        <option value="todos">todos</option>
+                                        <option value="call">call</option>
+                                        <option value="put">put</option>
+                                    </select>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-resultado">Resultado</label>
+                                    <select name="input-resultado" id="input-resultado">
+                                        <option value="todos">todos</option>
+                                        <option value="win">win</option>
+                                        <option value="loss">loss</option>
+                                        <option value="empate">empate</option>
+                                    </select>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-resultado">Padrão</label>
+                                    <select name="input-estrategia" id="input-estrategia">
+                                        <option value="todos">todos</option>
+                                        {% for padrao in list_padroes %}
+                                            <option value="{{ padrao }}">{{ padrao }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="contents-filtros-geral">
+                                    <label for="input-resultado">Alerta</label>
+                                    <select name="input-alerta" id="input-alerta">
+                                        <option value="todos">todos</option>
+                                        {% for alerta in list_alertas %}
+                                            <option value="{{ alerta }}">{{ alerta }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <input type="button" id="btn-gerar-pre-analise" value="Gerar Pré-Análise" disabled="true">
+                                    <!-- <input type="button" id="btn-aplicar-filtros-principal" value="Filtrar" onclick="aplicar_filtros_principal();"> -->
+                                </div>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h1 style="
+                                background-color: yellow;
+                                color: black;
+                                width: 450px !important;
+                                padding: 30px;
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                text-align: center;
+                                ">Em Desenvolvimento</h1>
+                        </div>
+                        
+                        <div class="table-results-base-geral">
+                            <table class="table-results-resume">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>expiração</th>
+                                        <th>padrão</th>
+                                        <th>alerta</th>
+                                        <th>mercado</th>
+                                        <th>ativo</th>
+                                        <th>direção</th>
+                                        <th>resultado</th>
+                                        <th>sup M15</th>
+                                        <th>sup 1H</th>
+                                        <th>sup 4H</th>
+                                        <th>res M15</th>
+                                        <th>res 1H</th>
+                                        <th>res 4H</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

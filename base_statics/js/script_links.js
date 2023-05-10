@@ -11,6 +11,13 @@ else if (link_actual.pathname.includes("config-admin")) {
 else if (link_actual.pathname.includes("autenticacao-iqoption")) {
     nameClassAux = "autenticacao-iqoption"
 }
+
+else if (link_actual.pathname.includes("config-visao-geral")) {
+    nameClassAux = "config-visao-geral"
+}
+else if (link_actual.pathname.includes("pre-analise")) {
+    nameClassAux = "pre-analise"
+}
 // ----------------------------------------------------------------------------------------------
 let content_footer = document.querySelector(".content-footer");
 if (link_actual.pathname.includes("config-admin") | link_actual.pathname.includes("/")) {

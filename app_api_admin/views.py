@@ -254,9 +254,13 @@ def edit_visao_geral_config(request):
     print(body)
     edit = edit_registro_visao_geral(body)
     return JsonResponse(edit)
-
-
-
+# -------------------
+@csrf_exempt
+@login_required(login_url="login_admin")
+def pre_analise(request):
+    if request.method == "GET":
+        
+        return render(request, "app/pre_analise.html")
 # -------------------
 @login_required(login_url="login_admin")
 def autenticao_iqoption(request):

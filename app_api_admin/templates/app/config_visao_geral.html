@@ -31,28 +31,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <!-- <div class="dashboard-visao-geral">
-        <div class="dashboard-visao-geral-resultados-paridades-dash-1">
-            <canvas id="myChart"></canvas>
-        </div>
-        <div class="dashboard-visao-geral-resultados-paridades-dash-2">
-            <canvas id="myChart-2"></canvas>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
-
-    <script src="{% static 'script_dash_config_visao_geral.js' %}"></script>
-    <script defer>
-        createDashboardConfigVisaoGeral("{% url 'config_visao_geral' %}", "estrategia_1");
-        function filtroEstrategiaVisaoGeral(event) {
-            let estrategia = event.target.value;
-            createDashboardConfigVisaoGeral("{% url 'config_visao_geral' %}", estrategia);
-        }
-        function edit_registro(event) {
-            // edit_config_visao_geral
-            saveConfig("{% url 'edit_config_visao_geral' %}", event);
-        }
-    </script>
+    </div>  
     
 {% endblock %}

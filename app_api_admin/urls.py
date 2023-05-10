@@ -14,6 +14,7 @@ urlpatterns = [
     path("config-admin-post/", views.config_admin_post, name="config_admin_post"),
     path("config-visao-geral/", views.visao_geral_config, name="config_visao_geral"),
     path("edit-config-visao-geral/", views.edit_visao_geral_config, name="edit_config_visao_geral"),
+    path("pre-analise/", views.pre_analise, name="pre_analise"),
     path("query-results-operations-get-data-dashboard/", views.query_results_operations_get_data_dashboard, name="query_results_operations_get_data_dashboard"),
 
     # path("instrucoes-painel/", views.instrucoes_painel, name="instrucoes_painel"),

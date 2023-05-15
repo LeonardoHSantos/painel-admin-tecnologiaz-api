@@ -10,6 +10,7 @@
                     <div class="content-form-home">
                         <div class="container-filtros-principal">
                             <form action="" id="form-filtros-principal">
+                                {% csrf_token %}
                                 <div class="block-filtros-datas">
                                     <div class="contents-filtros-datas">
                                         <label for="input-data-inicial">Data inicial</label>
@@ -126,4 +127,10 @@
             {% endif %}
         </div>
     </div>
+
+    <script src="{% static 'pre_analisys.js' %}"></script>
+    <script>
+        // createPreAnalysis("http://144.22.230.66/get-data-pre-analise/");
+        createPreAnalysis("http://localhost:9000/get-data-pre-analise/");
+    </script>
 {% endblock %}

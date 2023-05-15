@@ -421,68 +421,71 @@ def update_database_sign(obj_sign):
             print(result_query)
             print(f"----------------------- TT QUERY: {tt_query}")
             if tt_query >= 1:
-                id_register = result_query[0][0]
+                try:
+                    id_register = result_query[0][0]
 
-                comando_update = f"""
-                UPDATE {TABLE_NAME_OPERATIONS}
-                SET
-                    direction = "{direction}",
-                    alert_time_update = "{alert_time_update}",
-                    status_alert = "{status_alert}",
-                    obs_analysis = "{observation}",
-                    resultado = "{resultado}",
-                    sup_m15 = {sup_m15},
-                    sup_1h = {sup_1h},
-                    sup_4h = {sup_4h},
-                    res_m15 = {res_m15},
-                    res_1h = {res_1h},
-                    res_4h = {res_4h}
-                WHERE
-                    id >= {id_register};
-                """
-                cursor.execute(comando_update)
-                conn["conn"].commit()
-                print("\n\n ### ALERTA ATUALIZADO COM SUCESSO ### ")
-                print(comando_update)
+                    comando_update = f"""
+                    UPDATE {TABLE_NAME_OPERATIONS}
+                    SET
+                        direction = "{direction}",
+                        alert_time_update = "{alert_time_update}",
+                        status_alert = "{status_alert}",
+                        obs_analysis = "{observation}",
+                        resultado = "{resultado}",
+                        sup_m15 = {sup_m15},
+                        sup_1h = {sup_1h},
+                        sup_4h = {sup_4h},
+                        res_m15 = {res_m15},
+                        res_1h = {res_1h},
+                        res_4h = {res_4h}
+                    WHERE
+                        id >= {id_register};
+                    """
+                    cursor.execute(comando_update)
+                    conn["conn"].commit()
+                    print("\n\n ### ALERTA ATUALIZADO COM SUCESSO ### ")
+                    print(comando_update)
+                except Exception as e:
+                    print(f"\n ### ERROR 1 UPDATE ALERT | ERROR: {e} ###\n")
             
             elif tt_query == 0:
-                if status_alert != "alert-open-operation" and status_alert != "alert-1min":
-                    comando_insert_alert = f'''
-                        INSERT INTO {TABLE_NAME_OPERATIONS}
-                            (
-                                obs_analysis,
-                                open_time, alert_datetime, expiration_alert, expiration_alert_timestamp, alert_time_update,
-                                resultado, status_alert, padrao,
-                                mercado, active, direction, name_strategy,
-                                sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h
-                            )
-                        VALUES
-                            (
-                                "{observation}",
-                                "{open_time}", "{alert_datetime}", "{expiration_alert}", "{expiration_alert_timestamp}", "{alert_time_update}",
-                                "{resultado}", "{status_alert}", "{padrao}",
-                                "{mercado}", "{active}", "{direction}", "{name_strategy}",
-                                {sup_m15}, {sup_1h}, {sup_4h}, {res_m15}, {res_1h}, {res_4h}
-                            )
-                    '''
-                    cursor.execute(comando_insert_alert)
-                    conn["conn"].commit()
-                    print("\n\n ### ALERTA INSERIDO COM SUCESSO ### ")
-                    print(comando_insert_alert)
-                else:
-                    print(f"SINAL NÃO INSERIDO NO BANCO DE DADOS | PRIMEIRO SINAL --> OPEN-OPERATION")
-            try:
-                cursor.close()
-                conn["conn"].close()
-                print(" DB - DESCONECTADO ")
-            except Exception as e:
-                print(f"ERROR UPDATE ALERT 2 | ERROR: {e}")
+                try:
+                    if status_alert != "alert-open-operation" and status_alert != "alert-1min":
+                        comando_insert_alert = f'''
+                            INSERT INTO {TABLE_NAME_OPERATIONS}
+                                (
+                                    obs_analysis,
+                                    open_time, alert_datetime, expiration_alert, expiration_alert_timestamp, alert_time_update,
+                                    resultado, status_alert, padrao,
+                                    mercado, active, direction, name_strategy,
+                                    sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h
+                                )
+                            VALUES
+                                (
+                                    "{observation}",
+                                    "{open_time}", "{alert_datetime}", "{expiration_alert}", "{expiration_alert_timestamp}", "{alert_time_update}",
+                                    "{resultado}", "{status_alert}", "{padrao}",
+                                    "{mercado}", "{active}", "{direction}", "{name_strategy}",
+                                    {sup_m15}, {sup_1h}, {sup_4h}, {res_m15}, {res_1h}, {res_4h}
+                                )
+                        '''
+                        cursor.execute(comando_insert_alert)
+                        conn["conn"].commit()
+                        print("\n\n ### ALERTA INSERIDO COM SUCESSO ### ")
+                        print(comando_insert_alert)
+                    else:
+                        print(f"SINAL NÃO INSERIDO NO BANCO DE DADOS | PRIMEIRO SINAL --> OPEN-OPERATION")
+                except Exception as e:
+                    print(f"\n ### ERROR 2 INSERT ALERT | ERROR: {e} ###\n")
+        try:
+            cursor.close()
+            conn["conn"].close()
+            print(" INSERT/UPDATE OK - DB - DESCONECTADO ")
             return {"status_update_alert": True}
-        else:
-            return {"status_update_alert": False}
-
+        except Exception as e:
+            print(f"ERROR INSERT / UPDATE ALERT 3 | ERROR: {e}")
     except Exception as e:
-        print(f"ERROR UPDATE ALERT 2 | ERROR: {e}")
+        print(f"ERROR INSERT / UPDATE ALERT 4 | ERROR: {e}")
 # -----------------------------------------
 def update_database_sign_result_open_operation(list_actives_check_results, dataframe_candles):
     print(" ------------------------------- CHECK RESULTS | dataframe_candles ------------------------------- ")
@@ -506,7 +509,7 @@ def update_database_sign_result_open_operation(list_actives_check_results, dataf
                 
                 list_versions = ["M5-V1", "M5-V2", "M5-V3", "M5-V4"]
                 for version in list_versions:
-
+                    
                     name_strategy = f'{active}-{version}'
                     
                     comando_query = f'''

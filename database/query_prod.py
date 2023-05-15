@@ -1,6 +1,6 @@
 from database.conn import conn_db_producao
 from base_process.process.expirations.expiration_candle import datetime_now, convert_datetime_to_string
-from config_auth import TABLE_NAME_OPERATIONS, TABLE_NAME_ESTRATEGIAS
+from config_auth import TABLE_NAME_OPERATIONS, TABLE_NAME_ESTRATEGIAS, TABLE_RANK_OPERATIONS_M5
 
 # def query_database_prod_estrategia(data_inicio, data_fim):
 def query_database_prod_estrategia(string_query):
@@ -140,6 +140,7 @@ def query_database_prod_estrategia(string_query):
     except Exception as e:
         print(f"ERROR QUERY 2 | ERROR: {e}")
 
+# -----------------------------------------------
 def edit_registro_visao_geral(body):
     estrategia =    body["estrategia"]
     active_name =   body["active_name"]
@@ -179,3 +180,188 @@ def edit_registro_visao_geral(body):
     except Exception as e:
         print(f"ERROR UPDATE 2 - VISÃO GERAL | ERROR: {e}")
         return {"status_update": False}
+
+
+# --------------------------------------------------------------  
+# query - ranking results
+def query_operations_resume_M5(active_name, estrategia):
+    obj_name_strategies = {
+        "estrategia_1": "PADRAO-M5-V1",
+        "estrategia_2": "PADRAO-M5-V2",
+        "estrategia_3": "PADRAO-M5-V3",
+        "estrategia_4": "PADRAO-M5-V4",
+    }
+    try:
+        conn = conn_db_producao()
+        cursor = None
+        dict_resume = dict()
+        resume_results = None
+        if conn["status_conn_db"] == True:
+            cursor = conn["conn"].cursor()
+
+            comando_query = f'''
+            SELECT 
+                id, active, direction, resultado, mercado, status_alert, padrao, name_strategy
+            FROM
+                {TABLE_NAME_OPERATIONS}
+            where active = "{active_name}" and  padrao = "{obj_name_strategies[estrategia]}";
+            '''
+            print(comando_query)
+            cursor.execute(comando_query)
+            result_query    = cursor.fetchall()
+            tt_query = len(result_query)
+            results = None
+            #  -------
+            if tt_query >= 1 :
+                tt_win = 0
+                tt_loss = 0
+                tt_empate = 0
+                tt_resume = 0
+                perc_win = 0.0
+                perc_loss = 0.0
+                retroativo = 5
+                results = result_query[len(result_query)-retroativo:]
+                for result in results:
+                    if result[3] == "win":
+                        tt_win += 1
+                    elif result[3] == "loss":
+                        tt_loss += 1
+                    elif result[3] == "empate":
+                        tt_empate += 1
+                tt_resume = tt_win + tt_loss + tt_empate
+
+                if tt_win >= 1:
+                    perc_win = float(tt_win / tt_resume)
+                else:
+                    perc_win = 0.0
+                # -------------------------
+                if tt_loss >= 1:
+                    perc_loss = float(tt_loss / tt_resume)
+                else:
+                    perc_loss = 0.0
+                data = {
+                    "active_name": active_name,
+                    "estrategia": estrategia,
+                    "tt_win":tt_win,
+                    "tt_loss":tt_loss,
+                    "tt_empate":tt_empate,
+                    "tt_resume":tt_resume,
+                    "perc_win":perc_win,
+                    "perc_loss":perc_loss
+                }
+                dict_resume.update(data)
+            else:
+                data = {
+                    "active_name": active_name,
+                    "estrategia": estrategia,
+                    "tt_win": 0,
+                    "tt_loss": 0,
+                    "tt_empate": 0,
+                    "tt_resume": 0,
+                    "perc_win": 0.0,
+                    "perc_loss": 0.0
+                }
+                dict_resume.update(data)
+        try:
+            cursor.close()
+            conn["conn"].close()
+            print(" DB - DESCONECTADO ")
+        except Exception as e:
+            print(f"ERROR DESCONNECT 1 | ERROR: {e}")
+        
+        return results, dict_resume
+          
+    except Exception as e:
+        print(f"ERROR QUERY RANK 1 | ERROR: {e}")
+        try:
+            cursor.close()
+            conn["conn"].close()
+            print(" DB - DESCONECTADO ")
+        except Exception as e:
+            print(f"ERROR DESCONNECT 2 | ERROR: {e}")
+
+def update_ranking_M5(obj_results):
+    active_name = obj_results["active_name"]
+    estrategia = obj_results["estrategia"]
+    tt_win = obj_results["tt_win"]
+    tt_loss = obj_results["tt_loss"]
+    tt_empate = obj_results["tt_empate"]
+    tt_resume = obj_results["tt_resume"]
+    perc_win = obj_results["perc_win"]
+    perc_loss = obj_results["perc_loss"]
+    try:
+        conn = conn_db_producao()
+        cursor = None
+        if conn["status_conn_db"] == True:
+            cursor = conn["conn"].cursor()
+            comando_update = f'''
+            UPDATE
+                {TABLE_RANK_OPERATIONS_M5}
+            SET
+                {estrategia}_tt_win = {tt_win},
+                {estrategia}_tt_loss = {tt_loss},
+                {estrategia}_tt_empate = {tt_empate},
+                {estrategia}_perc_win = {perc_win},
+                {estrategia}_perc_loss = {perc_loss}
+            WHERE
+                active_name = "{active_name}" and id >= 1
+            '''
+            print(comando_update)
+            cursor.execute(comando_update)
+            conn["conn"].commit()
+            print("SUCCESS UPDATE RANK STRATEGIES")
+
+        try:
+            cursor.close()
+            conn["conn"].close()
+            print(" DB - DESCONECTADO ")
+            return {"status_update": True}
+        except Exception as e:
+            print(f"ERROR UPDATE - VISÃO GERAL | ERROR: {e}")
+            return {"status_update": False}
+
+
+    except Exception as e:
+        print(f"ERROR UPDATE RANKING OPERATIONS | ERROR: {e}")
+        return {"status_update": False}
+
+def query_ranking_strategies_M5(active_name, estrategia):
+    try:
+        conn = conn_db_producao()
+        cursor = None
+        dict_results = dict()
+        resume_results = None
+        if conn["status_conn_db"] == True:
+            cursor = conn["conn"].cursor()
+
+            comando_query = f'''
+            SELECT
+                {estrategia}_tt_win, {estrategia}_tt_loss, {estrategia}_tt_empate,
+                {estrategia}_perc_win, {estrategia}_perc_loss
+            FROM
+                {TABLE_RANK_OPERATIONS_M5}
+            WHERE
+                active_name = "{active_name}"
+            '''
+            print(comando_query)
+            cursor.execute(comando_query)
+            result_query    = cursor.fetchall()
+            tt_query = len(result_query)
+            print(result_query)
+            
+        try:
+            cursor.close()
+            conn["conn"].close()
+            print(" DB - DESCONECTADO ")
+        except Exception as e:
+            print(f"ERROR DESCONNECT 1 | ERROR: {e}")
+        return dict_results, resume_results
+    except Exception as e:
+        print(f"ERROR QUERY RANK 1 | ERROR: {e}")
+        try:
+            cursor.close()
+            conn["conn"].close()
+            print(" DB - DESCONECTADO ")
+        except Exception as e:
+            print(f"ERROR DESCONNECT 2 | ERROR: {e}")
+

@@ -21,58 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 CONTROL_API = None
 
-def query_results_operations(string_query):
-    try:
-        return query_database_prod_estrategia(string_query)
-    except Exception as e:
-        print(e)
-        return False
-# -------------------
-@csrf_exempt
-def query_results_operations_get_data_dashboard(request):
-    data_inicio = None
-    data_fim = None
-    if request.method == "POST":
-        data = json.loads(request.body)
-        data_inicio = data["data_inicio"]
-        data_fim = data["data_fim"]
-        # print(f"\n\n\nBODY --------------------->>>>> {data}")
-        if data_inicio == None or data_inicio == "":
-            data_inicio = datetime_now(tzone="America/Sao Paulo") + timedelta(days=-1)
-            data_inicio.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
-        else:
-            data_inicio = data_inicio + f" 00:00:00"
-        # ------------------------------------
-        if data_fim == None or data_fim == "":
-            data_fim = datetime_now(tzone="America/Sao Paulo").replace(hour=23, minute=59, second=59, microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
-        else:
-            data_fim = data_fim + f" 23:59:59"
-        # ------------------------------------
-        string_query = "WHERE "
-        for k, v in data.items():
-            # print(f"------------------------>>> K: {k} | V: {v}")
-            if k != "data_inicio" and k != "data_fim":
-                if v != "todos" and v != "":
-                    if string_query == "WHERE ":
-                        string_query = string_query + f' {k} = "{v}"'
-                    else:
-                        string_query = string_query + f' and {k} = "{v}"'
-                    # print(string_query)
-        
-        # string_query.replace("WHERE  and", "WHERE ")
-        if string_query == "WHERE ":
-            string_query = string_query + f'expiration_alert >= "{data_inicio}" and expiration_alert <= "{data_fim}"'
-        elif string_query != "WHERE ":
-            string_query = string_query + f' and expiration_alert >= "{data_inicio}" and expiration_alert <= "{data_fim}"'
-        # print(f"QUERY -------->>> {string_query}")
-        
-        try:
-            data = query_results_operations(string_query=string_query)
-            # print(f"DATA RESULT -------------> {data}")
-            return JsonResponse({"code": 200, "data": json.dumps(data[0]), "resume_results": data[1]})
-        except Exception as e:
-            print(e)
-            return JsonResponse({"code": 400})
+
 # -------------------
 def register_user_admin(request):
     if request.method == "GET":
@@ -136,7 +85,6 @@ def login_user_admin(request):
         password    = request.POST.get("password_user") # password_user
         print(f"POST ------------------> {request.POST}")
 
-        
         # get_user = User.objects.all()
         filter_user = User.objects.filter(username=email)
         # filter_email = User.objects.filter(email=email)
@@ -156,7 +104,7 @@ def login_user_admin(request):
 # -------------------
 def logout_user(request):
     logout(request=request)
-    return redirect("home")
+    return redirect("login_admin")
 # -------------------
 @login_required(login_url="login_admin")
 def home(request):
@@ -348,3 +296,59 @@ def stop_api(request):
         return JsonResponse({"code": 500, "status_api": str(e).replace("'", ""), "control_api": 0})
 # def instrucoes_painel(request):
 #     return render(request, "app/instrucoes_painel.html")
+
+
+
+# -------------------
+@csrf_exempt
+def query_results_operations_get_data_dashboard(request):
+    data_inicio = None
+    data_fim = None
+    if request.method == "POST":
+        data = json.loads(request.body)
+        data_inicio = data["data_inicio"]
+        data_fim = data["data_fim"]
+        # print(f"\n\n\nBODY --------------------->>>>> {data}")
+        if data_inicio == None or data_inicio == "":
+            data_inicio = datetime_now(tzone="America/Sao Paulo") + timedelta(days=-1)
+            data_inicio.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            data_inicio = data_inicio + f" 00:00:00"
+        # ------------------------------------
+        if data_fim == None or data_fim == "":
+            data_fim = datetime_now(tzone="America/Sao Paulo").replace(hour=23, minute=59, second=59, microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            data_fim = data_fim + f" 23:59:59"
+        # ------------------------------------
+        string_query = "WHERE "
+        for k, v in data.items():
+            # print(f"------------------------>>> K: {k} | V: {v}")
+            if k != "data_inicio" and k != "data_fim":
+                if v != "todos" and v != "":
+                    if string_query == "WHERE ":
+                        string_query = string_query + f' {k} = "{v}"'
+                    else:
+                        string_query = string_query + f' and {k} = "{v}"'
+                    # print(string_query)
+        
+        # string_query.replace("WHERE  and", "WHERE ")
+        if string_query == "WHERE ":
+            string_query = string_query + f'expiration_alert >= "{data_inicio}" and expiration_alert <= "{data_fim}"'
+        elif string_query != "WHERE ":
+            string_query = string_query + f' and expiration_alert >= "{data_inicio}" and expiration_alert <= "{data_fim}"'
+        # print(f"QUERY -------->>> {string_query}")
+        
+        try:
+            # data = query_results_operations(string_query=string_query)
+            data = query_database_prod_estrategia(string_query)
+            # print(f"DATA RESULT -------------> {data}")
+            return JsonResponse({"code": 200, "data": json.dumps(data[0]), "resume_results": data[1]})
+        except Exception as e:
+            print(e)
+            return JsonResponse({"code": 400})
+# def query_results_operations(string_query):
+#     try:
+#         return query_database_prod_estrategia(string_query)
+#     except Exception as e:
+#         print(e)
+#         return False

@@ -18,25 +18,30 @@ class ChannelsWSS:
     
     # -------------------------------------------------------------------------------------------
     def get_candles(list_requests, expiration):
-        name = 'sendMessage'
-        list_msg_requests = []
-        for _msg in list_requests:
-            for idx in range(len(_msg["timeframes"])):
-                print(idx, _msg["active_id"], _msg["active_name"], _msg["timeframes"][idx], _msg["amounts_sup_res"][idx])      
-                message = {
-                    'name': 'get-candles',
-                    'version': '2.0',
-                    'body': {
-                        'active_id': int(_msg["active_id"]),
-                        'size': int(_msg["timeframes"][idx]),
-                        'to': int(expiration),
-                        'count': int(_msg["amounts_sup_res"][idx]),
-                    }
-                }
-                request_id = f"{_msg['active_name']} - {_msg['estrategia']} - {TIMEFRAMES_NAME[int(_msg['timeframes'][idx])]}"
-                msg_GET_CANDLES = PrepareData.create_message_websocket(name=name, msg=message, request_id=request_id)
-                list_msg_requests.append(PrepareData.convert_data_to_string(msg_GET_CANDLES))
-        return list_msg_requests
+        try:
+            name = 'sendMessage'
+            list_msg_requests = []
+            for _msg in list_requests:
+                for idx in range(len(_msg["timeframes"])):
+                    print(idx, _msg["active_id"], _msg["active_name"], _msg["timeframes"][idx], _msg["amounts_sup_res"][idx])
+                    if int(_msg["amounts_sup_res"][idx]) >= 1:
+                        message = {
+                            'name': 'get-candles',
+                            'version': '2.0',
+                            'body': {
+                                'active_id': int(_msg["active_id"]),
+                                'size': int(_msg["timeframes"][idx]),
+                                'to': int(expiration),
+                                'count': int(_msg["amounts_sup_res"][idx]),
+                            }
+                        }
+                        request_id = f"{_msg['active_name']} - {_msg['estrategia']} - {TIMEFRAMES_NAME[int(_msg['timeframes'][idx])]}"
+                        msg_GET_CANDLES = PrepareData.create_message_websocket(name=name, msg=message, request_id=request_id)
+                        list_msg_requests.append(PrepareData.convert_data_to_string(msg_GET_CANDLES))
+            return list_msg_requests
+        except Exception as e:
+            print(f"\n ### ERROR CREATE GET CANDLES PROCESS ChannelsWSS.get_candles | ERROR: {e} ### \n")
+            return None
     
     # -------------------------------------------------------------------------------------------
     def get_candles_check_results_open_operations(list_requests, expiration):

@@ -150,13 +150,13 @@ class AnalyzeData_Strategies:
                         print(f"lista_tt_resume: {lista_tt_resume}")
 
                         # atualização do timeframe 5M atual
-                        df_timeframe_5M["tt_res_15m"]   = lista_tt_res_m15
-                        df_timeframe_5M["tt_res_1H"]    = lista_tt_res_1H
-                        df_timeframe_5M["tt_res_4H"]    = lista_tt_res_4H
-                        df_timeframe_5M["tt_sup_15m"]   = lista_tt_sup_m15
-                        df_timeframe_5M["tt_sup_1H"]    = lista_tt_sup_1H
-                        df_timeframe_5M["tt_sup_4H"]    = lista_tt_sup_4H
-                        df_timeframe_5M["resume"]       = lista_tt_resume
+                        df_timeframe_5M["res_15m_extrato_tm"]   = lista_tt_res_m15
+                        df_timeframe_5M["res_1h_extrato_tm"]    = lista_tt_res_1H
+                        df_timeframe_5M["res_4h_extrato_tm"]    = lista_tt_res_4H
+                        df_timeframe_5M["sup_15m_extrato_tm"]   = lista_tt_sup_m15
+                        df_timeframe_5M["sup_1h_extrato_tm"]    = lista_tt_sup_1H
+                        df_timeframe_5M["sup_4h_extrato_tm"]    = lista_tt_sup_4H
+                        df_timeframe_5M["resume"]               = lista_tt_resume
 
                         if estrategia == "estrategia_1":
                             try:
@@ -258,8 +258,8 @@ def estrategia_1(estrategia, dataframe, status_alert, padrao, version, active):
     sup_1h   = dataframe["sup_1h_extrato_tm"][id_1]
     sup_4h   = dataframe["sup_4h_extrato_tm"][id_1]
     res_m15  = dataframe["res_15m_extrato_tm"][id_1]
-    res_1h  = dataframe["res_1h_extrato_tm"][id_1]
-    res_4h  = dataframe["res_4h_extrato_tm"][id_1]
+    res_1h   = dataframe["res_1h_extrato_tm"][id_1]
+    res_4h   = dataframe["res_4h_extrato_tm"][id_1]
     # if dataframe["status_candle"][id_5] == "baixa" and dataframe["status_candle"][id_4] == "alta" and dataframe["status_candle"][id_3] == "alta" and dataframe["status_candle"][id_2] == "baixa" and dataframe["status_candle"][id_1] == "baixa":
     if dataframe["status_candle"][id_5] == "baixa" and dataframe["status_candle"][id_4] == "alta" and dataframe["status_candle"][id_2] == "baixa" and dataframe["status_candle"][id_1] == "baixa":
         if dataframe["sup_15m_extrato_tm"][id_1] >= 2 or dataframe["sup_1h_extrato_tm"][id_1] >= 1 or  dataframe["sup_4h_extrato_tm"][id_1] >= 1:

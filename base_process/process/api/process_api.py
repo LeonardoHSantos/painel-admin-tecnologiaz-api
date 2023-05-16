@@ -97,7 +97,7 @@ class ProcessAPI:
                     _minutes = dt_now.minute
                     sleep(1)
                     try:
-                        print(f"check: {self.obj_wss.check_timestamp}")
+                        # print(f"check: {self.obj_wss.check_timestamp}")
                         list_check_tm.append(self.obj_wss.check_timestamp)
                         if list_check_tm.count(self.obj_wss.check_timestamp) >= 4:
                             print("#### TENTANDO SE RECONECTAR AO WEBSOCKET ####")

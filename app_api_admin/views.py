@@ -272,10 +272,10 @@ def start_api(request):
         _start = var_aux.CONTROL_STATUS_API.start_api()
         print(f"************************************************ START API: {_start}")
         if _start["auth_status"] == True:
-            # update_status_api(status_api=status_api, email=identifier)
+            update_status_api(status_api=status_api, email=identifier)
             return JsonResponse({"code": 200, "status_api": "run-success", "control_api": 1})
         else:
-            # update_status_api(status_api=0, email=identifier)
+            update_status_api(status_api=0, email=identifier)
             return JsonResponse({"code": 400, "status_api": "run-failed", "control_api": 0})
     except Exception as e:
         print(f"ERROR START API | ERROR: {e}")
@@ -288,7 +288,7 @@ def stop_api(request):
     email = data["email"]
     status_api = data["status_api"]
     try:
-        # threading.Thread(target=update_status_api(status_api=status_api, email=email)).start()
+        threading.Thread(target=update_status_api(status_api=status_api, email=email)).start()
         threading.Thread(target=var_aux.CONTROL_STATUS_API.stop_process_api()).start()
         return JsonResponse({"code": 200, "status_api": "stop-success", "control_api": 0})
     except Exception as e:

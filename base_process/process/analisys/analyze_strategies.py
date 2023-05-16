@@ -101,15 +101,15 @@ class AnalyzeData_Strategies:
                                             elif analise_timeframe == "4H" and min_M5 <= 10 and hora_M5 == hora_SUP_RES:
                                                 status_process_sup_res = False
                                             
-                                            print(f"""\n\n\n
-                                            ********************************
-                                                5M: {m5_from.minute} | TM: {analise_timeframe} --> MINUTO: {analise_from.minute}
-                                                min_M5: {min_M5}
-                                                min_SUP_RES: {min_SUP_RES}
-                                                ----------------------------
-                                                min_M5: {hora_M5}
-                                                min_SUP_RES: {hora_SUP_RES}
-                                            ********************************""")
+                                            # print(f"""\n\n\n
+                                            # ********************************
+                                            #     5M: {m5_from.minute} | TM: {analise_timeframe} --> MINUTO: {analise_from.minute}
+                                            #     min_M5: {min_M5}
+                                            #     min_SUP_RES: {min_SUP_RES}
+                                            #     ----------------------------
+                                            #     min_M5: {hora_M5}
+                                            #     min_SUP_RES: {hora_SUP_RES}
+                                            # ********************************""")
                                             if status_process_sup_res == True:
                                                 # Verificação de candles de M5 com fechamento em alta.
                                                 if m5_status_candle == "alta":

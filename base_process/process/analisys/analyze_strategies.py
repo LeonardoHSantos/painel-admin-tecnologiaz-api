@@ -7,7 +7,6 @@ from base_process.process.expirations.expiration_candle import expiration_operat
 
 class AnalyzeData_Strategies:
     def process_sup_res(dataframe_candles, status_alert):
-        
         list_estrategies = list(dataframe_candles["estrategias"].drop_duplicates(keep="last"))
         print(f"*********** list_estrategies: {list_estrategies}")
 
@@ -15,154 +14,178 @@ class AnalyzeData_Strategies:
         print("\n\n\n\n\n *************************** DATAFRAME FROM INFO")
         print(dataframe_candles.info())
         
+        
         try:
-            for estrategia in list_estrategies:
-                df_analysis_m5  = dataframe_candles[ (dataframe_candles["timeframe"]=="5M") & (dataframe_candles["estrategias"]==estrategia) ]
-                list_actives    = list(df_analysis_m5["active_name"].drop_duplicates(keep="last"))
+            list_estrategias    = list(dataframe_candles["estrategias"].drop_duplicates(keep="last"))
+            list_active_name    = list(dataframe_candles["active_name"].drop_duplicates(keep="last"))
+            list_timeframe      = list(dataframe_candles["timeframe"].drop_duplicates(keep="last"))
+            print(f"list_estrategias: {list_estrategias}")
+            print(f"list_active_name: {list_active_name}")
+            print(f"list_timeframe: {list_timeframe}")
 
-                
-                for active in list_actives:
-                    print(f"ANALISANDO | {estrategia} -- {active}")
-                    df_analysis_m5_active = df_analysis_m5[(df_analysis_m5["active_name"]==active)]
-                    print(f"DATAFRAME M5 --> \n{df_analysis_m5_active}")
+            for estrategia in list_estrategias:
+                for active in list_active_name:
 
-                    list_results_sup_res = []
-                    # -----------------------
-                    list_results_sup_res_15M = []
-                    list_results_sup_res_1H  = []
-                    list_results_sup_res_4H = []
-                    list_results_sup_res_extrato_tm = []
-                    # ----------------------------------
-                    list_results_res_15m_extrato_tm = []
-                    list_results_sup_15m_extrato_tm = []
-                    list_results_res_1h_extrato_tm = []
-                    list_results_sup_1h_extrato_tm = []
-                    list_results_res_4h_extrato_tm = []
-                    list_results_sup_4h_extrato_tm = []
+                    # Definição da base M5 para a estratégia e paridade atual do loop.
+                    df_timeframe_5M = dataframe_candles[(dataframe_candles["estrategias"]==estrategia)&(dataframe_candles["active_name"]==active)&(dataframe_candles["timeframe"]=="5M")]
+                    tt_candles_m5 = len(df_timeframe_5M["from"].values)
+                    # print(f"TT CANDLES : {tt_candles_m5} | BASE:\n{df_timeframe_5M}")
 
-                    for idx_active in df_analysis_m5_active.index:
+                    # Verificação do status da paridade, checa se está ativo para essa estratégia. Ex: se o valor de tt_candles estiver >= 1 é ativo | se estiver 0 é inativo
+                    if tt_candles_m5 >= 1:
+
+                        # listas complementares de suporte e resistência
+                        lista_tt_resume = list()
+                        # ---
+                        lista_tt_res_m15 = list()
+                        lista_tt_res_1H = list()
+                        lista_tt_res_4H = list()
+                        # ---
+                        lista_tt_sup_m15 = list()
+                        lista_tt_sup_1H = list()
+                        lista_tt_sup_4H = list()
+
+                        # loop para percorrer os índices do DataFrame da estratégia e paridade atual.
+                        for idx_m5 in df_timeframe_5M.index:
+                            active_name         = df_timeframe_5M["active_name"][idx_m5]
+                            m5_from             = df_timeframe_5M["from"][idx_m5]
+                            m5_max              = df_timeframe_5M["max"][idx_m5]
+                            m5_open             = df_timeframe_5M["open"][idx_m5]
+                            m5_close            = df_timeframe_5M["close"][idx_m5]
+                            m5_min              = df_timeframe_5M["min"][idx_m5]
+                            m5_status_candle    = df_timeframe_5M["status_candle"][idx_m5]
+                            m5_timeframe        = df_timeframe_5M["timeframe"][idx_m5]
+                            # print(f"m5_timeframe: {m5_timeframe} | active_name: {active_name} | m5_from: {m5_from} | m5_max: {m5_max} | m5_open: {m5_open} | m5_close: {m5_close} | m5_min: {m5_min} | m5_status_candle: {m5_status_candle}")
+
                         
-                        m5_from             = df_analysis_m5_active["from"][idx_active]
-                        m5_status_candle    = df_analysis_m5_active["status_candle"][idx_active]
-                        m5_active_name      = df_analysis_m5_active["active_name"][idx_active]
-                        m5_max              = float(df_analysis_m5_active["max"][idx_active])
-                        m5_open             = float(df_analysis_m5_active["open"][idx_active])
-                        m5_close            = float(df_analysis_m5_active["close"][idx_active])
-                        m5_min              = float(df_analysis_m5_active["min"][idx_active])
 
+                            # Definição do DataFrame para análise de suporte e resistência, será ignorado o timeframe de M5.
+                            temp_resumo_sup_res = list()
+                            temp_tt_confluencias_timeframes = list()
+                            for timeframe in list_timeframe:
 
+                                if timeframe != "5M":
+                                    df_timeframe_sup_res = dataframe_candles[
+                                        (dataframe_candles["estrategias"]==estrategia)&
+                                        (dataframe_candles["active_name"]==active)&
+                                        (dataframe_candles["timeframe"]== timeframe)
+                                    ]
+                                    tt_candles_sup_res = len(df_timeframe_sup_res["from"].values)
+                                    
+                                    # Checagem de quantidade de candles do timeframe atual.
+                                    if tt_candles_sup_res >= 1:
 
-                        df_sup_res = dataframe_candles[ (dataframe_candles["timeframe"]!="5M") &
-                                                        (dataframe_candles["estrategias"]==estrategia) &
-                                                        (dataframe_candles["active_name"]==m5_active_name)]
-                        print(f"\n\n************************* DATAFRAME SUP/RES:\n{df_sup_res}")
-                        if len(df_sup_res["from"].index) >= 1:
-                            list_temp_results = []
-                            list_results_sup_res_tt_timeframes = []
-                            for idx_sup_res in df_sup_res.index:
-                                sup_res_timeframe   = df_sup_res["timeframe"][idx_sup_res]
-                                sup_res_from        = df_sup_res["from"][idx_sup_res]
-                                sup_status_candle   = df_sup_res["status_candle"][idx_sup_res]
-                                sup_res_active_name = df_sup_res["active_name"][idx_sup_res]
-                                sup_res_min         = float(df_sup_res["min"][idx_sup_res])
-                                sup_res_max         = float(df_sup_res["max"][idx_sup_res])
-                                
-                                print(f"\nANALISANDO | M5 --> m5_active_name: {m5_active_name} | m5_min: {m5_min} | m5_max: {m5_max} || {sup_res_timeframe} --> sup_res_active_name: {sup_res_active_name} | sup_res_min: {sup_res_min} | sup_res_max: {sup_res_max}")
-                                valida_timeframe = True
-                                
-                                if sup_res_timeframe == "15M" and m5_from.hour == sup_res_from.hour and m5_from.minute + 15 < sup_res_from.minute:
-                                    valida_timeframe = False
-                                    print("------------------>>>> NÃO ANALISAR")
-                                elif m5_from <= sup_res_from:
-                                    valida_timeframe = False
-                                
-                                if valida_timeframe == True:
-                                    if sup_status_candle == "alta":
-                                        if m5_status_candle == "alta":
-                                            if m5_max >= sup_res_max and m5_close < sup_res_max:
-                                                list_temp_results.append(f"1 - RES - FROM M5: {m5_from} | FROM RES: {sup_res_timeframe} | {sup_res_from}")
-                                                list_results_sup_res_tt_timeframes.append(sup_res_timeframe)
-                                                list_results_sup_res_extrato_tm.append(f"RES - {sup_res_timeframe}")
+                                        # loop para percorrer os índices do DataFrame de suporte e resistência da estratégia -> paridade -> timeframe atual.
+                                        for idx_sup_res in df_timeframe_sup_res.index:
+                                            analise_from             = df_timeframe_sup_res["from"][idx_sup_res]
+                                            analise_max              = df_timeframe_sup_res["max"][idx_sup_res]
+                                            analise_open             = df_timeframe_sup_res["open"][idx_sup_res]
+                                            analise_close            = df_timeframe_sup_res["close"][idx_sup_res]
+                                            analise_min              = df_timeframe_sup_res["min"][idx_sup_res]
+                                            analise_status_candle    = df_timeframe_sup_res["status_candle"][idx_sup_res]
+                                            analise_timeframe        = df_timeframe_sup_res["timeframe"][idx_sup_res]
 
-                                        
-                                        elif m5_status_candle == "baixa":
-                                            if m5_min >= sup_res_max and m5_open < sup_res_max:
-                                                list_temp_results.append(f"2 - RES - FROM M5: {m5_from} | FROM RES: {sup_res_timeframe} | {sup_res_from}")
-                                                list_results_sup_res_tt_timeframes.append(sup_res_timeframe)
-                                                list_results_sup_res_extrato_tm.append(f"RES - {sup_res_timeframe}")
+                                            status_process_sup_res = True
+                                            min_M5 = int(m5_from.minute)
+                                            min_SUP_RES = int(analise_from.minute)
+                                            hora_M5 = int(m5_from.hour)
+                                            hora_SUP_RES = int(analise_from.hour)
 
-                                    elif sup_status_candle == "baixa":
-                                        if m5_status_candle == "alta":
-                                            if m5_min <= sup_res_min and m5_open > sup_res_min:
-                                                list_temp_results.append(f"3 - SUP - FROM M5: {m5_from} | FROM SUP: {sup_res_timeframe} | {sup_res_from}")
-                                                list_results_sup_res_tt_timeframes.append(sup_res_timeframe)
-                                                list_results_sup_res_extrato_tm.append(f"SUP - {sup_res_timeframe}")
-                                        
-                                        elif m5_status_candle == "baixa":
-                                            if m5_min <= sup_res_min and m5_open > sup_res_min:
-                                                list_temp_results.append(f"4 - SUP - FROM M5: {m5_from} | FROM SUP: {sup_res_timeframe} | {sup_res_from}")
-                                                list_results_sup_res_tt_timeframes.append(sup_res_timeframe)
-                                                list_results_sup_res_extrato_tm.append(f"SUP - {sup_res_timeframe}")
-                                        
-                                    else:
-                                        list_temp_results.append("--")
+                                            # Valida se o candle de 5M está dentro do candle candle de M15 atual.
+                                            # O intuito é evitar Falso Positivo em confluências de suporte/resistência.
+                                            # Motivo: preços atuais próximos ao fechamento do candle anterior podem confluir facilmente e gerar sinais com baixa assertividade.
+                                            if analise_timeframe == "15M" and min_M5 <= (min_SUP_RES + 15) and hora_M5 <= hora_SUP_RES:
+                                                status_process_sup_res = False
+                                            elif analise_timeframe == "1H" and min_M5 <= 10 and hora_M5 == hora_SUP_RES:
+                                                status_process_sup_res = False
+                                            elif analise_timeframe == "4H" and min_M5 <= 10 and hora_M5 == hora_SUP_RES:
+                                                status_process_sup_res = False
+                                            
+                                            print(f"""\n\n\n
+                                            ********************************
+                                                5M: {m5_from.minute} | TM: {analise_timeframe} --> MINUTO: {analise_from.minute}
+                                                min_M5: {min_M5}
+                                                min_SUP_RES: {min_SUP_RES}
+                                                ----------------------------
+                                                min_M5: {hora_M5}
+                                                min_SUP_RES: {hora_SUP_RES}
+                                            ********************************""")
+                                            if status_process_sup_res == True:
+                                                # Verificação de candles de M5 com fechamento em alta.
+                                                if m5_status_candle == "alta":
+                                                    if m5_max >= analise_max and m5_close < analise_max:
+                                                        temp_resumo_sup_res.append(f"1 - RES {analise_timeframe} | analise_from: {analise_from} | TM: {analise_timeframe}")
+                                                        temp_tt_confluencias_timeframes.append(f"RES - {analise_timeframe}")
+                                                    
+                                                # Verificação de candles de M5 com fechamento em baixa.
+                                                elif m5_status_candle == "baixa":
+                                                    if m5_min <= analise_min and m5_close > analise_min:
+                                                        temp_resumo_sup_res.append(f"2 - SUP {analise_timeframe} | analise_from: {analise_from} | TM: {analise_timeframe}")
+                                                        temp_tt_confluencias_timeframes.append(f"SUP - {analise_timeframe}")
 
-                            # ----------------------------------------------
-                            list_results_sup_res.append(list_temp_results)
-                            list_results_sup_res_15M.append(list_results_sup_res_tt_timeframes.count("15M"))
-                            list_results_sup_res_1H.append(list_results_sup_res_tt_timeframes.count("1H"))
-                            list_results_sup_res_4H.append(list_results_sup_res_tt_timeframes.count("4H"))
-                            # ----------------------------------------------------------------------------------------------------
-                            list_results_res_15m_extrato_tm.append(list_results_sup_res_extrato_tm.count("RES - 15M"))
-                            list_results_sup_15m_extrato_tm.append(list_results_sup_res_extrato_tm.count("SUP - 15M"))
-                            list_results_res_1h_extrato_tm.append(list_results_sup_res_extrato_tm.count("RES - 1H"))
-                            list_results_sup_1h_extrato_tm.append(list_results_sup_res_extrato_tm.count("SUP - 1H"))
-                            list_results_res_4h_extrato_tm.append(list_results_sup_res_extrato_tm.count("RES - 4H"))
-                            list_results_sup_4h_extrato_tm.append(list_results_sup_res_extrato_tm.count("SUP - 4H"))
-                            list_results_sup_res_extrato_tm.clear()
+                            # atualização das listas finais
+                            tt_res_15m = temp_tt_confluencias_timeframes.count("RES - 15M")
+                            tt_res_1H = temp_tt_confluencias_timeframes.count("RES - 1H")
+                            tt_res_4H = temp_tt_confluencias_timeframes.count("RES - 4H")
+                            # ---
+                            tt_sup_15m = temp_tt_confluencias_timeframes.count("SUP - 15M")
+                            tt_sup_1H = temp_tt_confluencias_timeframes.count("SUP - 1H")
+                            tt_sup_4H = temp_tt_confluencias_timeframes.count("SUP - 4H")
+                            # ---
+                            lista_tt_res_m15.append(tt_res_15m)
+                            lista_tt_res_1H.append(tt_res_1H)
+                            lista_tt_res_4H.append(tt_res_4H)
+                            lista_tt_sup_m15.append(tt_sup_15m)
+                            lista_tt_sup_1H.append(tt_sup_1H)
+                            lista_tt_sup_4H.append(tt_sup_4H)
+                            lista_tt_resume.append(temp_resumo_sup_res)
 
+                        print(" *** RESULTADO FINAL DA ANÁLISE DE SUPORTE E RESISTÊNCIA *** ")
+                        print(f"lista_tt_res_m15: {lista_tt_res_m15}")
+                        print(f"lista_tt_res_1H: {lista_tt_res_1H}")
+                        print(f"lista_tt_res_4H: {lista_tt_res_4H}")
+                        print(f"lista_tt_sup_m15: {lista_tt_sup_m15}")
+                        print(f"lista_tt_sup_1H: {lista_tt_sup_1H}")
+                        print(f"lista_tt_sup_4H: {lista_tt_sup_4H}")
+                        print(f"lista_tt_resume: {lista_tt_resume}")
 
-                    df_analysis_m5_active["results"]        = list_results_sup_res
-                    df_analysis_m5_active["results_15M"]    = list_results_sup_res_15M
-                    df_analysis_m5_active["results_1H"]     = list_results_sup_res_1H
-                    df_analysis_m5_active["results_4H"]     = list_results_sup_res_4H
-                    # --------------------------------------------------------------------------
-                    df_analysis_m5_active["res_15m_extrato_tm"] = list_results_res_15m_extrato_tm
-                    df_analysis_m5_active["sup_15m_extrato_tm"] = list_results_sup_15m_extrato_tm
-                    df_analysis_m5_active["res_1h_extrato_tm"]  = list_results_res_1h_extrato_tm
-                    df_analysis_m5_active["sup_1h_extrato_tm"]  = list_results_sup_1h_extrato_tm
-                    df_analysis_m5_active["res_4h_extrato_tm"]  = list_results_res_4h_extrato_tm
-                    df_analysis_m5_active["sup_4h_extrato_tm"]  = list_results_sup_4h_extrato_tm
+                        # atualização do timeframe 5M atual
+                        df_timeframe_5M["tt_res_15m"]   = lista_tt_res_m15
+                        df_timeframe_5M["tt_res_1H"]    = lista_tt_res_1H
+                        df_timeframe_5M["tt_res_4H"]    = lista_tt_res_4H
+                        df_timeframe_5M["tt_sup_15m"]   = lista_tt_sup_m15
+                        df_timeframe_5M["tt_sup_1H"]    = lista_tt_sup_1H
+                        df_timeframe_5M["tt_sup_4H"]    = lista_tt_sup_4H
+                        df_timeframe_5M["resume"]       = lista_tt_resume
 
-                    # df_analysis_m5_active.to_excel(f"{estrategia} - {active}.xlsx")
-                    if estrategia == "estrategia_1":
-                        try:
-                            query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_1")
-                            update_ranking_M5(obj_results=query_resume[1])
-                        except Exception as e:
-                            print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
-                        estrategia_1(estrategia=estrategia, dataframe=df_analysis_m5_active, padrao="PADRAO-M5-V1", version="M5-V1", active=active, status_alert=status_alert)
-                    elif estrategia == "estrategia_2":
-                        try:
-                            query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_2")
-                            update_ranking_M5(obj_results=query_resume[1])
-                        except Exception as e:
-                            print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
-                        estrategia_2(estrategia=estrategia, dataframe=df_analysis_m5_active, padrao="PADRAO-M5-V2", version="M5-V2", active=active, status_alert=status_alert)
-                    elif estrategia == "estrategia_3":
-                        try:
-                            query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_3")
-                            update_ranking_M5(obj_results=query_resume[1])
-                        except Exception as e:
-                            print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
-                        estrategia_3(estrategia=estrategia, dataframe=df_analysis_m5_active, padrao="PADRAO-M5-V3", version="M5-V3", active=active, status_alert=status_alert)
-                    elif estrategia == "estrategia_4":
-                        try:
-                            query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_4")
-                            update_ranking_M5(obj_results=query_resume[1])
-                        except Exception as e:
-                            print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
-                        estrategia_4(estrategia=estrategia, dataframe=df_analysis_m5_active, padrao="PADRAO-M5-V4", version="M5-V4", active=active, status_alert=status_alert)
+                        if estrategia == "estrategia_1":
+                            try:
+                                query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_1")
+                                update_ranking_M5(obj_results=query_resume[1])
+                            except Exception as e:
+                                print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
+                            estrategia_1(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V1", version="M5-V1", active=active, status_alert=status_alert)
+                        elif estrategia == "estrategia_2":
+                            try:
+                                query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_2")
+                                update_ranking_M5(obj_results=query_resume[1])
+                            except Exception as e:
+                                print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
+                            estrategia_2(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V2", version="M5-V2", active=active, status_alert=status_alert)
+                        elif estrategia == "estrategia_3":
+                            try:
+                                query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_3")
+                                update_ranking_M5(obj_results=query_resume[1])
+                            except Exception as e:
+                                print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
+                            estrategia_3(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V3", version="M5-V3", active=active, status_alert=status_alert)
+                        elif estrategia == "estrategia_4":
+                            try:
+                                query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_4")
+                                update_ranking_M5(obj_results=query_resume[1])
+                            except Exception as e:
+                                print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
+                            estrategia_4(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V4", version="M5-V4", active=active, status_alert=status_alert)
         except Exception as e:
             print(f"ERROR DF: {e}")
 

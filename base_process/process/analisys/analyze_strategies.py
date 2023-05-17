@@ -433,22 +433,27 @@ def estrategia_4(estrategia, dataframe, status_alert, padrao, version, active):
     sup_m15  = dataframe["sup_15m_extrato_tm"][id_1]
     sup_1h   = dataframe["sup_1h_extrato_tm"][id_1]
     sup_4h   = dataframe["sup_4h_extrato_tm"][id_1]
+    # ---
     res_m15  = dataframe["res_15m_extrato_tm"][id_1]
     res_1h  = dataframe["res_1h_extrato_tm"][id_1]
     res_4h  = dataframe["res_4h_extrato_tm"][id_1]
+
     if dataframe["status_candle"][id_7] == "baixa" and dataframe["status_candle"][id_6] == "alta" and dataframe["status_candle"][id_5] == "alta" and dataframe["status_candle"][id_3] == "baixa":
-        if dataframe["res_15m_extrato_tm"][id_1] >= 2 or dataframe["res_1h_extrato_tm"][id_1] >= 1 ==  dataframe["res_4h_extrato_tm"][id_1] >= 1:
+        if dataframe["res_15m_extrato_tm"][id_1] >= 2 or dataframe["res_1h_extrato_tm"][id_1] >= 1 == dataframe["res_4h_extrato_tm"][id_1] >= 1:
             direction = "put"
             result_confluencias = True
         else:
             observation = "put - sem conf. sup res"
 
     elif dataframe["status_candle"][id_7] == "alta" and dataframe["status_candle"][id_6] == "baixa" and dataframe["status_candle"][id_5] == "baixa" and dataframe["status_candle"][id_3] == "alta":
-        if dataframe["sup_15m_extrato_tm"][id_1] >= 2 or dataframe["sup_1h_extrato_tm"][id_1] == 0 or  dataframe["sup_4h_extrato_tm"][id_1] >= 1:
-            direction = "call"
-            result_confluencias = True
+        if dataframe["sup_1h_extrato_tm"][id_1] == 0:
+            if dataframe["sup_15m_extrato_tm"][id_1] >= 2 or dataframe["sup_4h_extrato_tm"][id_1] >= 1:
+                direction = "call"
+                result_confluencias = True
+            else:
+                observation = "#1 call - sem conf. sup res"
         else:
-            observation = "call - sem conf. sup res"
+            observation = "#2 call - sem conf. sup res"
     
     prepare_signal_to_database(dataframe, direction, status_alert, padrao, version, active, observation, result_confluencias,
                                sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h)

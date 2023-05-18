@@ -3,7 +3,6 @@ from base_process.process.prepare_data.prepareData import PrepareData
 from base_process.process.expirations.expiration_candle import datetime_now, convert_datetime_to_string
 from config_auth import TABLE_NAME_ESTRATEGIAS, TABLE_NAME_STATUS_API, TABLE_NAME_OPERATIONS
 
-
 # -----------------------------------------
 def query_database_actives_all():
     try:
@@ -383,9 +382,11 @@ def update_database_sign(obj_sign):
     active = obj_sign["active"]
     direction = obj_sign["direction"]
     name_strategy = obj_sign["name_strategy"]
+    # ---
     sup_m15 = obj_sign["sup_m15"]
     sup_1h  = obj_sign["sup_1h"]
     sup_4h  = obj_sign["sup_4h"]
+    # ---
     res_m15 = obj_sign["res_m15"]
     res_1h  = obj_sign["res_1h"]
     res_4h  = obj_sign["res_4h"]
@@ -458,7 +459,8 @@ def update_database_sign(obj_sign):
                                     open_time, alert_datetime, expiration_alert, expiration_alert_timestamp, alert_time_update,
                                     resultado, status_alert, padrao,
                                     mercado, active, direction, name_strategy,
-                                    sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h
+                                    sup_m15, sup_1h, sup_4h,
+                                    res_m15, res_1h, res_4h
                                 )
                             VALUES
                                 (
@@ -466,7 +468,8 @@ def update_database_sign(obj_sign):
                                     "{open_time}", "{alert_datetime}", "{expiration_alert}", "{expiration_alert_timestamp}", "{alert_time_update}",
                                     "{resultado}", "{status_alert}", "{padrao}",
                                     "{mercado}", "{active}", "{direction}", "{name_strategy}",
-                                    {sup_m15}, {sup_1h}, {sup_4h}, {res_m15}, {res_1h}, {res_4h}
+                                    {sup_m15}, {sup_1h}, {sup_4h},
+                                    {res_m15}, {res_1h}, {res_4h}
                                 )
                         '''
                         cursor.execute(comando_insert_alert)

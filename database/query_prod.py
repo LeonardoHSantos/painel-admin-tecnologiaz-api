@@ -1,6 +1,15 @@
+import pandas as pd
 from database.conn import conn_db_producao
 from base_process.process.expirations.expiration_candle import datetime_now, convert_datetime_to_string
 from config_auth import TABLE_NAME_OPERATIONS, TABLE_NAME_ESTRATEGIAS, TABLE_RANK_OPERATIONS_M5
+
+obj_name_strategies = {
+    "estrategia_1":  "PADRAO-M5-V1",
+    "estrategia_2":  "PADRAO-M5-V2",
+    "estrategia_3":  "PADRAO-M5-V3",
+    "estrategia_4":  "PADRAO-M5-V4"
+}
+
 
 # def query_database_prod_estrategia(data_inicio, data_fim):
 def query_database_prod_estrategia(string_query):
@@ -181,16 +190,9 @@ def edit_registro_visao_geral(body):
         print(f"ERROR UPDATE 2 - VISÃO GERAL | ERROR: {e}")
         return {"status_update": False}
 
-
 # --------------------------------------------------------------  
 # query - ranking results
 def query_operations_resume_M5(active_name, estrategia):
-    obj_name_strategies = {
-        "estrategia_1": "PADRAO-M5-V1",
-        "estrategia_2": "PADRAO-M5-V2",
-        "estrategia_3": "PADRAO-M5-V3",
-        "estrategia_4": "PADRAO-M5-V4",
-    }
     try:
         conn = conn_db_producao()
         cursor = None
@@ -325,43 +327,106 @@ def update_ranking_M5(obj_results):
         print(f"ERROR UPDATE RANKING OPERATIONS | ERROR: {e}")
         return {"status_update": False}
 
-def query_ranking_strategies_M5(active_name, estrategia):
+
+# checagem de sinal -> verifica se existe um sinal para a expiração atual.
+# O resultado será utilizado para classificar qual paridade será continuada na operação atual.
+def check_sign_ranking(expiration):
+    """
+        1) consulta sinais com próximas entradas para expirar em 5M;\n
+        2) classifica o melhor resultado;\n
+        3) se houver mais de um sinal, a melhor estratégia com a melhor paridade terá o status-alert continuado;\n
+        4) os demais sinais com a mesma expiração terá o status-alert modificado para "canceled-double-signal".\n
+        Objetivo do processo:\n
+        - Evitar 2 ou mais sinais ao mesmo tempo.
+    """
     try:
+        list_signs = list()
+        
         conn = conn_db_producao()
         cursor = None
-        dict_results = dict()
-        resume_results = None
+        # -------------------------------------------------
         if conn["status_conn_db"] == True:
             cursor = conn["conn"].cursor()
 
             comando_query = f'''
-            SELECT
-                {estrategia}_tt_win, {estrategia}_tt_loss, {estrategia}_tt_empate,
-                {estrategia}_perc_win, {estrategia}_perc_loss
+            SELECT 
+                id, active, direction, status_alert, padrao, name_strategy, alert_datetime, expiration_alert, alert_time_update
             FROM
-                {TABLE_RANK_OPERATIONS_M5}
+                {TABLE_NAME_OPERATIONS}
             WHERE
-                active_name = "{active_name}"
+                expiration_alert = "{expiration}"
             '''
-            print(comando_query)
             cursor.execute(comando_query)
             result_query    = cursor.fetchall()
             tt_query = len(result_query)
-            print(result_query)
+            # print(result_query)
+            print(f" *** TT QUERY | CHECK EXPIRATIONS SIGN: {tt_query} *** ")
+            _obj_name_strategies = {
+                "PADRAO-M5-V1": "estrategia_1",
+                "PADRAO-M5-V2": "estrategia_2",
+                "PADRAO-M5-V3": "estrategia_3",
+                "PADRAO-M5-V4": "estrategia_4"
+            }
+            if tt_query >= 1:
+                for sign in result_query:
+                    if sign[1] not in list_signs:
+                    
+                        comando_query = f'''
+                        SELECT 
+                            id, active_name, {_obj_name_strategies[sign[4]]}_perc_win
+                        FROM
+                            {TABLE_RANK_OPERATIONS_M5}
+                        WHERE
+                            active_name = "{sign[1]}"
+                        '''
+                        cursor.execute(comando_query)
+                        result_query_rank = cursor.fetchall()
+                        list_signs.append(
+                            {
+                                "id_sign": sign[0],
+                                "active_name":result_query_rank[0][1],
+                                "perc_win": result_query_rank[0][2],
+                                "padrao": _obj_name_strategies[sign[4]],
+                                "status_alert": sign[3]
+                            }
+                        )
             
-        try:
-            cursor.close()
-            conn["conn"].close()
-            print(" DB - DESCONECTADO ")
-        except Exception as e:
-            print(f"ERROR DESCONNECT 1 | ERROR: {e}")
-        return dict_results, resume_results
+            df = pd.DataFrame(list_signs).sort_values(by="perc_win", ascending=False)
+            df.index = list(range(0, len(df.index)))
+            # ----------------------
+            check_2 = df[df["status_alert"]=="alert-open-operation"]
+            check_2.index = list(range(0, len(check_2.index)))
+            
+            if len(check_2.index) > 1:
+                for idx in check_2.index:
+                    if idx >= 1:
+                        check_2["status_alert"][idx] = "alert-canceled-double-signal"
+
+                        comando_update_sign = f'''
+                        UPDATE
+                            {TABLE_NAME_OPERATIONS}
+                        SET
+                            status_alert = "alert-signal-double-canceled"
+                        WHERE
+                            id = {check_2["id_sign"][idx]}
+                        '''
+                        cursor.execute(comando_update_sign)
+                        conn["conn"].commit()
+                        print(comando_update_sign)
+            try:
+                cursor.close()
+                conn["conn"].close()
+                print(" DB - DESCONECTADO ")
+            except Exception as e:
+                print(f"ERROR CHECK RESULTS 1 | ERROR: {e}")
+            return check_2
     except Exception as e:
-        print(f"ERROR QUERY RANK 1 | ERROR: {e}")
+        print(f"ERROR CHECK RESULTS 2 | ERROR: {e}")
         try:
             cursor.close()
             conn["conn"].close()
-            print(" DB - DESCONECTADO ")
+            print("#2 DB - DESCONECTADO ")
         except Exception as e:
-            print(f"ERROR DESCONNECT 2 | ERROR: {e}")
+            print(f"ERROR CHECK RESULTS 1 | ERROR: {e}")
+    return {"status_get_results": False}
 

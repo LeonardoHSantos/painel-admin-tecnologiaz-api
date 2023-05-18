@@ -1,7 +1,8 @@
 import pandas as pd
 
 from database.query_database import update_database_sign
-from database.query_prod import query_ranking_strategies_M5, query_operations_resume_M5, update_ranking_M5
+from database.query_prod import check_sign_ranking
+from database.query_prod import query_operations_resume_M5, update_ranking_M5
 
 from base_process.process.expirations.expiration_candle import expiration_operation_M5
 
@@ -229,11 +230,31 @@ def prepare_signal_to_database(dataframe, direction, status_alert, padrao, versi
     }
     if direction == "call" or direction == "put":
         update_database_sign(obj_sign=obj_to_database)
+        check_sign_ranking(expiration=expiration["expiration_alert"])
     if result_confluencias == True:
         print(f"\n ------------------------------ Enviar sinal ao banco de dados: SIM | RESULT-CONFLUÊNCIAS: {result_confluencias} ------------------------------ ")
     else:
         print(f"\n ------------------------------ Enviar sinal ao banco de dados: NÃO | RESULT-CONFLUÊNCIAS: {result_confluencias} ------------------------------ ")
     print(f"SIGNAL TO DATABASE ------------------->>>>> {obj_to_database}\n\n")
+
+
+# processo de análise de ranking
+def process_check_sign_ranking(active_name, expiration, padrao):
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # ----------------------------------------------------------------------
 def estrategia_1(estrategia, dataframe, status_alert, padrao, version, active):

@@ -22,11 +22,13 @@ body {
     overflow: scroll;
     overflow-x: hidden;
 }
-body::-webkit-scrollbar {
+body::-webkit-scrollbar,
+select::-webkit-scrollbar {
     width: 3px;
     background-color: #b4bdc5;
 }
-body::-webkit-scrollbar-thumb{
+body::-webkit-scrollbar-thumb,
+select::-webkit-scrollbar-thumb {
     background-color: var(--color-base-1);
 }
 

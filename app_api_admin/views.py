@@ -1,13 +1,14 @@
 import json
 import bcrypt
 import threading
+import requests
 
 from datetime import timedelta
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from base_process.data_aux import var_aux
-from config_auth import LIST_PADROES, LIST_ALERTAS
+from config_auth import LIST_PADROES, LIST_ALERTAS, IP_SERVER_API_PRE_ANALISE
 
 from base_process.process.api.process_api import ProcessAPI
 from base_process.process.expirations.expiration_candle import datetime_now
@@ -207,8 +208,42 @@ def edit_visao_geral_config(request):
 @login_required(login_url="login_admin")
 def pre_analise(request):
     if request.method == "GET":
-        
-        return render(request, "app/pre_analise.html")
+        query = query_database_actives_all()
+        print(query)
+        list_actives = query
+        list_padroes = [""]
+        # print(f"---------------->>> ACTIVES ALL: {list_actives}")
+        context = {
+            "list_actives": list_actives,
+            "list_padroes": LIST_PADROES,
+        }
+        return render(request, "app/pre_analise.html", context=context)
+# ---
+@csrf_exempt
+def get_data_pre_estrategia(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        identifier = data["identifier"]
+        password = data["password"]
+        token = data["token"]
+        estrategia = data["estrategia"]
+        list_active_names = data["list_active_names"]
+        data_inicio = data["data_inicio"]
+        data_fim = data["data_fim"]
+        print(f"""
+            ----------------------- POST - PAINEL
+            --> identifier: {identifier}
+            --> password: {password}
+            --> token: {token}
+            --> estrategia: {estrategia}
+            --> list_active_names: {list_active_names}
+            --> data_inicio: {data_inicio}
+            --> data_fim: {data_fim}
+        """)
+        data = json.loads(requests.post(url=f"http://{IP_SERVER_API_PRE_ANALISE}/run-analysis/", data= json.dumps(data)).content)
+        return JsonResponse(data)
+
+
 # -------------------
 @login_required(login_url="login_admin")
 def autenticao_iqoption(request):

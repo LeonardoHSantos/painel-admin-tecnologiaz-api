@@ -16,6 +16,7 @@ urlpatterns = [
     path("config-visao-geral/", views.visao_geral_config, name="config_visao_geral"),
     path("edit-config-visao-geral/", views.edit_visao_geral_config, name="edit_config_visao_geral"),
     path("pre-analise/", views.pre_analise, name="pre_analise"),
+    path("get-data-pre-analise/", views.get_data_pre_estrategia, name="get_data_pre_estrategia"),
 
     # path("instrucoes-painel/", views.instrucoes_painel, name="instrucoes_painel"),
 ]

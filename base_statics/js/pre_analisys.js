@@ -83,14 +83,14 @@ async function get_data_pre_analise(url){
                         console.log(data_to_html);
                         
                         // // ---------------------
-                        document.getElementById("input-data-inicial").min = data_inicial_post;
+                        // document.getElementById("input-data-inicial").min = data_inicial_post;
+                        // document.getElementById("input-data-inicial").max = data_final_post;
                         document.getElementById("input-data-inicial-filtro").min = data_inicial_post;
-                        document.getElementById("input-data-inicial").max = data_final_post;
                         document.getElementById("input-data-inicial-filtro").max = data_final_post;
                         // ------------
-                        document.getElementById("input-data-final").min = data_inicial_post;
+                        // document.getElementById("input-data-final").min = data_inicial_post;
+                        // document.getElementById("input-data-final").max = data_final_post;
                         document.getElementById("input-data-final-filtro").min = data_inicial_post;
-                        document.getElementById("input-data-final").max = data_final_post;
                         document.getElementById("input-data-final-filtro").max = data_final_post;
                         // // ---------------------
             

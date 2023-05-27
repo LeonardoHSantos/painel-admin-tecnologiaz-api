@@ -18,5 +18,7 @@ urlpatterns = [
     path("pre-analise/", views.pre_analise, name="pre_analise"),
     path("get-data-pre-analise/", views.get_data_pre_estrategia, name="get_data_pre_estrategia"),
 
+
+    # path("painel-config-test/", views.painel_config_test, name="painel_config_test"),
     # path("instrucoes-painel/", views.instrucoes_painel, name="instrucoes_painel"),
 ]

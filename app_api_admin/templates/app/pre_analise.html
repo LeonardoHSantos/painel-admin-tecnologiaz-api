@@ -128,10 +128,10 @@
                                 <div>
                                     <div class="contents-filtros-geral-filtros">
                                         <label for="input-ativo">Ativo</label>
-                                        <select name="input-ativo" id="input-ativo">
-                                            <option value="todos">todos</option>
+                                        <select name="input-ativo" id="input-ativo"  onchange="updateList(event)">
+                                            <option value="todos" id="all-actives">add paridades...</option>
                                             {% for active in list_actives %}
-                                                <option value="{{ active }}">{{ active }}</option>
+                                                <option id="option-{{ active }}">{{ active }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -142,10 +142,6 @@
                                             <option value="estrategia_2">PADRAO-M5-V2</option>
                                             <option value="estrategia_3">PADRAO-M5-V3</option>
                                             <option value="estrategia_4">PADRAO-M5-V4</option>
-                                            <!-- <option value="todos">todos</option> -->
-                                             <!-- for padrao in list_padroes 
-                                                <option value="{{ padrao }}">{{ padrao }}</option>
-                                            endfor -->
                                         </select>
                                     </div>
                                 </div>
@@ -176,7 +172,13 @@
                                     
                                 </div>
 
+                                
                             </form>
+                            <div>
+                                <p style="font-weight: 600;">Paridades para analisar: </p>
+                                <div class="block-actives-to-analyze">
+                                </div>
+                            </div>
                         </div>
                         <div class="block-resultados-resumo container-analise">
                             <div class="card-results">
@@ -229,6 +231,16 @@
                                 </tbody>
 
                             </table>
+                        </div>
+                        <div class="block-pagination-pre-analise">
+                            <p>Paginas</p>
+                            
+                            <ul>
+                                <li style="font-weight: 600;">1</li>
+                                <li>2</li>
+                                <li>3</li>
+                                <li>4</li>
+                            </ul>
                         </div>
                     </div>
                 </div>

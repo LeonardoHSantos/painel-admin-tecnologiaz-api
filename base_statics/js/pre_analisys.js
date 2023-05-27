@@ -1,5 +1,35 @@
 // console.log("pre_analysis.js carregado...");
 
+
+function updateList(event){
+    // let elementID = event.target.id;
+    if (event.target.value != "todos"){
+        let elementsToAnalyze = document.querySelectorAll(".elements-to-analyze");
+        // console.log(elementsToAnalyze)
+        let checkInsert = true;
+        for(i=0; i < elementsToAnalyze.length; i++){
+            let elementCheck = elementsToAnalyze[i].className.split(" ");
+            if (elementCheck[0] == `element-${event.target.value}`){
+                checkInsert = false;
+            }
+        }
+        if (checkInsert == true){
+        document.querySelector(".block-actives-to-analyze").innerHTML += `
+        <span class="element-${event.target.value} elements-to-analyze">
+            <p id="element-${event.target.value}"  onclick="removeActiveToAnalyze(event)">${event.target.value}</p>
+        </span`;
+        }
+        document.getElementById("all-actives").selected = true;
+    }
+}
+function removeActiveToAnalyze(event){
+    document.querySelector(`.${event.target.id}`).remove();
+}
+
+
+// -----------------------------------------------------
+
+
 async function get_data_pre_analise(url){
 
     
@@ -28,7 +58,20 @@ async function get_data_pre_analise(url){
         } else {
             let status_process = false
             if (valid_dates == true){status_process = true;};
-            if (input_ativo == "todos") {status_process = false;};
+
+            // --------------------------------------------------------------
+            let listActives = [];
+            let elementsToAnalyze = document.querySelectorAll(".elements-to-analyze");
+            for(i=0; i < elementsToAnalyze.length; i++){
+                let elementCheck = elementsToAnalyze[i].className.split(" ");
+                listActives.push(elementCheck[0].replace("element-", ""))
+            }
+            console.log(listActives);
+            if (listActives.length < 1){
+                status_process = false;
+            }
+            // --------------------------------------------------------------
+            // if (input_ativo == "todos") {status_process = false;};
             if (input_estrategia == "todos"){status_process = false;};
             
             
@@ -56,7 +99,7 @@ async function get_data_pre_analise(url){
                     "password": input_password_broker,
                     "token": input_token_painel,
                     "estrategia": input_estrategia,
-                    "list_active_names": [input_ativo],
+                    "list_active_names": listActives,
                     "data_inicio": data_inicial_post,
                     "data_fim": data_final_post,
                     "sup_res_m15": sup_res_m15,

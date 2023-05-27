@@ -329,11 +329,6 @@ def stop_api(request):
     except Exception as e:
         print(f"ERROR STOP API | ERROR: {e}")
         return JsonResponse({"code": 500, "status_api": str(e).replace("'", ""), "control_api": 0})
-# def instrucoes_painel(request):
-#     return render(request, "app/instrucoes_painel.html")
-
-
-
 # -------------------
 @csrf_exempt
 def query_results_operations_get_data_dashboard(request):
@@ -381,9 +376,17 @@ def query_results_operations_get_data_dashboard(request):
         except Exception as e:
             print(e)
             return JsonResponse({"code": 400})
-# def query_results_operations(string_query):
-#     try:
-#         return query_database_prod_estrategia(string_query)
-#     except Exception as e:
-#         print(e)
-#         return False
+
+
+@login_required(login_url="login_admin")
+def painel_config_test(request):
+    if request.method == "GET":
+        query = query_database_actives_all()
+        print(query)
+        list_actives = query
+        context = {
+            "list_actives": list_actives,
+            "list_padroes": LIST_PADROES,
+            "list_alertas": LIST_ALERTAS,
+        }
+        return render(request, "app/painel_test.html", context=context)

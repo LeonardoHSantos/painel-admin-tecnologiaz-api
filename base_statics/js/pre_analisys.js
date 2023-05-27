@@ -55,7 +55,7 @@ async function get_data_pre_analise(url){
                     "identifier": input_email_broker,
                     "password": input_password_broker,
                     "token": input_token_painel,
-                    "estrategia": "estrategia_1",
+                    "estrategia": input_estrategia,
                     "list_active_names": [input_ativo],
                     "data_inicio": data_inicial_post,
                     "data_fim": data_final_post,
@@ -76,11 +76,11 @@ async function get_data_pre_analise(url){
                     return data.json();
                 }).then((data)=>{
                     data_post_final = data
-                    console.log(data)
+                    // console.log(data)
                     if (JSON.parse(data_post_final["code-process"] == 200)){
                         let data_to_html = JSON.parse(data_post_final['data_to_html']);
-                        console.log(data_post_final);
-                        console.log(data_to_html);
+                        // console.log(data_post_final);
+                        // console.log(data_to_html);
                         
                         // // ---------------------
                         // document.getElementById("input-data-inicial").min = data_inicial_post;

@@ -241,12 +241,14 @@ def get_data_pre_estrategia(request):
                 --> data_inicio: {data_inicio}
                 --> data_fim: {data_fim}
             """)
-            data = threading.Thread(target=json.loads(requests.post(url=f"http://{IP_SERVER_API_PRE_ANALISE}/run-analysis/", data= json.dumps(data)).content)).start()
+            data = json.loads(requests.post(url=f"http://{IP_SERVER_API_PRE_ANALISE}/run-analysis/", data= json.dumps(data)).content)
             return JsonResponse(data)
         except Exception as e:
             print(f" #### ERRO AO PROCESSAR PRE ANÁLISE | ERROR: {e}")
             return JsonResponse({"code-process": 400, "msg": "erro ao processar pré análise."})
 
+def process_pre_analise():
+    return 
 
 # -------------------
 @login_required(login_url="login_admin")

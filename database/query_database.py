@@ -531,38 +531,39 @@ def update_database_sign_result_open_operation(list_actives_check_results, dataf
                     print(f"COMADO QUERY CHECK RESULTS: {comando_query}")
                     print(f"----------------------- result query | update | TT QUERY: {tt_query}")
                     if tt_query >= 1:
-                        id_result = result_query[0][0]
-                        direction_sign = result_query[0][1]
-                        status_alert_sign = result_query[0][2]
-                        exp_db = result_query[0][3]
-                        print(f"DT NOW: {dt_now} | EXPIRATION DB: {expiration_alert}")
-                        print(f"DT NOW MINUTES: {dt_now.minute} | EXPIRATION DB MINUTES: {exp_db.minute}\n\n")
+                        for i in range(tt_query):
+                            id_result = result_query[i][0]
+                            direction_sign = result_query[i][1]
+                            status_alert_sign = result_query[i][2]
+                            exp_db = result_query[i][3]
+                            print(f"DT NOW: {dt_now} | EXPIRATION DB: {expiration_alert}")
+                            print(f"DT NOW MINUTES: {dt_now.minute} | EXPIRATION DB MINUTES: {exp_db.minute}\n\n")
 
-                        resultado = "-"
-                        if dt_now.minute == exp_db.minute:
-                            if status_candle == "sem mov.":
-                                resultado = "empate"
-                            elif direction_sign == "put" and status_candle == "baixa":
-                                resultado = "win"
-                            elif direction_sign == "put" and status_candle == "alta":
-                                resultado = "loss"
-                            elif direction_sign == "call" and status_candle == "alta":
-                                resultado = "win"
-                            elif direction_sign == "call" and status_candle == "baixa":
-                                resultado = "loss"
+                            resultado = "-"
+                            if dt_now.minute == exp_db.minute:
+                                if status_candle == "sem mov.":
+                                    resultado = "empate"
+                                elif direction_sign == "put" and status_candle == "baixa":
+                                    resultado = "win"
+                                elif direction_sign == "put" and status_candle == "alta":
+                                    resultado = "loss"
+                                elif direction_sign == "call" and status_candle == "alta":
+                                    resultado = "win"
+                                elif direction_sign == "call" and status_candle == "baixa":
+                                    resultado = "loss"
 
-                            # alert_time_update = "{dt_now.strftime("%Y-%m-%d %H:%M:%S")}"
-                            comando_update_check_result = f'''
-                                UPDATE {TABLE_NAME_OPERATIONS}
-                                    SET
-                                        resultado = "{resultado}"
-                                    WHERE
-                                        id = {id_result};
-                            '''
-                            cursor.execute(comando_update_check_result)
-                            conn["conn"].commit()
-                            print(comando_update_check_result)
-                            print("\n\n ### RESULTADO ATUALIZADO COM SUCESSO ### ")
+                                # alert_time_update = "{dt_now.strftime("%Y-%m-%d %H:%M:%S")}"
+                                comando_update_check_result = f'''
+                                    UPDATE {TABLE_NAME_OPERATIONS}
+                                        SET
+                                            resultado = "{resultado}"
+                                        WHERE
+                                            id = {id_result};
+                                '''
+                                cursor.execute(comando_update_check_result)
+                                conn["conn"].commit()
+                                print(comando_update_check_result)
+                                print("\n\n ### RESULTADO ATUALIZADO COM SUCESSO ### ")
 
                         
 

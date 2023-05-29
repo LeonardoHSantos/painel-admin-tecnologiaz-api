@@ -222,26 +222,30 @@ def pre_analise(request):
 @csrf_exempt
 def get_data_pre_estrategia(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        identifier = data["identifier"]
-        password = data["password"]
-        token = data["token"]
-        estrategia = data["estrategia"]
-        list_active_names = data["list_active_names"]
-        data_inicio = data["data_inicio"]
-        data_fim = data["data_fim"]
-        print(f"""
-            ----------------------- POST - PAINEL
-            --> identifier: {identifier}
-            --> password: {password}
-            --> token: {token}
-            --> estrategia: {estrategia}
-            --> list_active_names: {list_active_names}
-            --> data_inicio: {data_inicio}
-            --> data_fim: {data_fim}
-        """)
-        data = json.loads(requests.post(url=f"http://{IP_SERVER_API_PRE_ANALISE}/run-analysis/", data= json.dumps(data)).content)
-        return JsonResponse(data)
+        try:
+            data = json.loads(request.body)
+            identifier = data["identifier"]
+            password = data["password"]
+            token = data["token"]
+            estrategia = data["estrategia"]
+            list_active_names = data["list_active_names"]
+            data_inicio = data["data_inicio"]
+            data_fim = data["data_fim"]
+            print(f"""
+                ----------------------- POST - PAINEL
+                --> identifier: {identifier}
+                --> password: {password}
+                --> token: {token}
+                --> estrategia: {estrategia}
+                --> list_active_names: {list_active_names}
+                --> data_inicio: {data_inicio}
+                --> data_fim: {data_fim}
+            """)
+            data = threading.Thread(target=json.loads(requests.post(url=f"http://{IP_SERVER_API_PRE_ANALISE}/run-analysis/", data= json.dumps(data)).content)).start()
+            return JsonResponse(data)
+        except Exception as e:
+            print(f" #### ERRO AO PROCESSAR PRE ANÁLISE | ERROR: {e}")
+            return JsonResponse({"code-process": 400, "msg": "erro ao processar pré análise."})
 
 
 # -------------------

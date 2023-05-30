@@ -418,13 +418,14 @@ def update_database_sign(obj_sign):
     res_4h  = obj_sign["res_4h"]
     # ---
 
-    if status_alert != "alert-open-operation" and status_alert != "canceled":
+    list_open_types = ["alert-open-operation", "alert-open-operation-test"]
+    if status_alert not in list_open_types and status_alert != "canceled":
         open_time = open_time
         resultado = "process"
-    elif status_alert == "alert-open-operation" and direction == "put" or direction == "call":
+    elif status_alert in list_open_types and direction == "put" or direction == "call":
         open_time = open_time
         resultado = "open"
-    elif status_alert == "alert-open-operation" and direction != "put" and direction != "call":
+    elif status_alert in list_open_types and direction != "put" and direction != "call":
         open_time = open_time
         status_alert = "canceled"
     
@@ -477,7 +478,7 @@ def update_database_sign(obj_sign):
             
             elif tt_query == 0:
                 try:
-                    if status_alert != "alert-open-operation" and status_alert != "alert-1min":
+                    if status_alert not in list_open_types and status_alert != "alert-1min":
                         comando_insert_alert = f'''
                             INSERT INTO {TABLE_NAME_OPERATIONS}
                                 (

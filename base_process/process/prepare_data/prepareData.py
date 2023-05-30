@@ -29,7 +29,7 @@ class PrepareData:
             list(zip(
                 list_requests[0], list_requests[1], list_requests[2], list_requests[3], list_requests[4], list_requests[5], list_requests[6], list_requests[7], list_requests[8], list_requests[9],
                 list_requests[10], list_requests[11], list_requests[12], list_requests[13], list_requests[14], list_requests[15], list_requests[16], list_requests[17],
-                list_requests[18]
+                list_requests[18], list_requests[19], list_requests[20], list_requests[21]
             )),
             columns=[
             "active_name", "active_id",
@@ -37,7 +37,7 @@ class PrepareData:
             "estrategia_2", "estrategia_2_sup_res_m15", "estrategia_2_sup_res_1h", "estrategia_2_sup_res_4h",
             "estrategia_3", "estrategia_3_sup_res_m15", "estrategia_3_sup_res_1h", "estrategia_3_sup_res_4h",
             "estrategia_4", "estrategia_4_sup_res_m15", "estrategia_4_sup_res_1h", "estrategia_4_sup_res_4h",
-            "status_strategy"
+            "estrategia_5", "estrategia_5_sup_res_m15", "estrategia_5_sup_res_1h", "estrategia_5_sup_res_4h"
             ]
         )
     
@@ -88,6 +88,7 @@ class PrepareData:
             active_id   = dataframe_actives_open["id"][idx]
             active_name = dataframe_actives_open["ticker"][idx]
             if active_name in list_actives_database:
+                # "amounts_sup_res": 2 --> para coletar apenas 2 candles com expirações atual e anterior para depara de resultados.
                 list_requests.append(
                     {
                         "active_id": active_id,

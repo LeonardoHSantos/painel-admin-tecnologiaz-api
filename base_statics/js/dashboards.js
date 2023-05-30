@@ -1,11 +1,12 @@
-
+Chart.defaults.font.size = 16;
+Chart.defaults.font.family = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
 var dash_1;
-function createDashboardResults(element_id, element_canvas, list_hours, list_results_win, list_results_loss){
-    // const ctx = document.getElementById('myChart');
-    const ctx = document.getElementById(element_id);
-    try {
-        element_canvas.destroy();
-    } catch (error) {}
+var dash_2;
+function createDashboardResults(list_hours, list_results_win, list_results_loss, tt_win, tt_loss){
+    const ctx = document.getElementById('myChart');
+    const ctx_2 = document.getElementById('myChart-2');
+    try {dash_1.destroy();} catch (error) {}
+    try {dash_2.destroy();} catch (error) {}
 
     let data = {
         datasets: [{
@@ -21,9 +22,19 @@ function createDashboardResults(element_id, element_canvas, list_hours, list_res
         }],
         labels: list_hours
     }
+    let data_2 = {
+        labels: ["win", "loss"],
+        datasets: [{
+            type: 'doughnut',
+            data: [tt_win, tt_loss],
+            backgroundColor: [
+                '#00ff0d','#ff0000'
+            ],
+        }],
+    }
+
     // ------------------------------
-    element_canvas = new Chart(ctx, {
-        // type: 'bar',
+    dash_1 = new Chart(ctx, {
         data: data,
         options: {
             scales: {
@@ -36,62 +47,83 @@ function createDashboardResults(element_id, element_canvas, list_hours, list_res
             },
         },
     });
+    dash_2 = new Chart(ctx_2, {
+        type: 'doughnut',
+        data: data_2,
+    });
 }
 
-function prepareDataToDashboard(){
-    let list_hours = [0, 1, 2, 3, 4, 5];
-    const PromisseA = new Promise((resolve, reject)=>{
-        let obj_results = [
-            {"hora": 9, "result": "loss"},
-            {"hora": 9, "result": "loss"},
-            {"hora": 9, "result": "win"},
-            {"hora": 9, "result": "win"},
 
-            {"hora": 0, "result": "win"},
-            {"hora": 0, "result": "win"},
-            {"hora": 1, "result": "loss"},
-            {"hora": 1, "result": "win"},
-            {"hora": 1, "result": "win"},
-            {"hora": 1, "result": "win"},
-            {"hora": 1, "result": "win"},
-            {"hora": 1, "result": "win"},
-            {"hora": 2, "result": "loss"},
-            {"hora": 2, "result": "winn"},
-            {"hora": 2, "result": "loss"},
-            {"hora": 2, "result": "loss"},
-            {"hora": 2, "result": "win"},
-            {"hora": 2, "result": "loss"},
-            {"hora": 3, "result": "win"},
-            {"hora": 3, "result": "win"},
-            {"hora": 7, "result": "loss"},
-            {"hora": 7, "result": "win"},
-            {"hora": 7, "result": "win"},
-            {"hora": 7, "result": "win"},
-        ];
-        let lista_horarios = [];
+// --------------------------
+function compareNumbers(a, b) {
+    return a - b;
+}
+  
+function prepareDataToDashboard(obj_results){
+    let lista_horarios = [];
+    const PromisseA = new Promise((resolve, reject)=>{
+        
+        let tt_win = 0;
+        let tt_loss = 0;
+        let obj_results_final = {};
         for (i=0; i < obj_results.length; i++){
-            console.log(obj_results[i]["hora"], obj_results[i]["result"])
+            if (obj_results[i]["result"] == "win"){
+                tt_win = tt_win +1;
+            }
+            else if (obj_results[i]["result"] == "loss"){
+                tt_loss = tt_loss +1;
+            }
+            // ------------------------------------------------------
             if (!lista_horarios.includes(obj_results[i]["hora"])){
                 lista_horarios.push(obj_results[i]["hora"]);
+                if (obj_results[i]["result"] == "win"){
+                    obj_results_final[`${obj_results[i]["hora"]}`] = {"win":1, "loss":0};
+                } else {
+                    obj_results_final[`${obj_results[i]["hora"]}`] = {"win":0, "loss":1};
+                }
+            } else {
+                try {
+                    if (obj_results[i]["result"] == "win"){
+                        obj_results_final[`${obj_results[i]["hora"]}`]["win"] =  obj_results_final[`${obj_results[i]["hora"]}`]["win"] +1;
+                    } else if (obj_results[i]["result"] == "loss") {
+                        obj_results_final[`${obj_results[i]["hora"]}`]["loss"] =  obj_results_final[`${obj_results[i]["hora"]}`]["loss"] +1;
+                    }
+                } catch (error){
+                    console.log(error)
+                }
             }
         }
-        console.log("valores sort ", numbers);
-        resolve(lista_horarios)
-    }).then((lista_horarios)=>{
-        console.log(lista_horarios)
-        let list_results_win = [12, 3, 20, 11, 23, 9];
-        let list_results_loss = [23, 12, 9, 11, 19, 12]
+        // ------------------------------------------------------
+        let list_results_win = [];
+        let list_results_loss = []
+        for (let i in obj_results_final){
+            // soma +0 para caso não exita win ou loss para o horário atual do loop.
+            list_results_win.push(obj_results_final[i]["win"] +0);
+            list_results_loss.push(obj_results_final[i]["loss"] +0);
+        }
+        obj_results_final["tt_win"] = tt_win;
+        obj_results_final["tt_loss"] = tt_loss;
+        obj_results_final["list_results_win"] = list_results_win;
+        obj_results_final["list_results_loss"] = list_results_loss;
+        obj_results_final["horarios"] = lista_horarios.sort(compareNumbers)
+        resolve(obj_results_final)
+    })
     
-    
+    PromisseA.then((obj_results_final)=>{
+        return {
+            "horario": obj_results_final["horarios"],
+            "list_results_win": obj_results_final["list_results_win"],
+            "list_results_loss": obj_results_final["list_results_loss"],
+            "tt_win": obj_results_final["tt_win"],
+            "tt_loss": obj_results_final["tt_loss"],
+        }
+    }).then((data_process)=>{
         createDashboardResults(
-            "myChart",
-            dash_1,
-            lista_horarios,
-            list_results_win,
-            list_results_loss
+            data_process["horario"],
+            data_process["list_results_win"],
+            data_process["list_results_loss"],
+            data_process["tt_win"],
+            data_process["tt_loss"]
         )
     })
-
-
 }
-prepareDataToDashboard();

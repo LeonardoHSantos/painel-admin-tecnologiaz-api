@@ -162,7 +162,10 @@
                                 
                                 <div class="block-btn-filtros">
                                     <input type="button" id="btn-gerar-pre-analise" value="Gerar Pré-Análise" onclick="get_data();">
-                                    <input type="button" id="btn-show-filtros" value="Filtros" onclick="show_block_filters();">
+                                    <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+                                        <!-- <i class="fa-solid fa-filter"></i> -->
+                                        <input type="button" id="btn-show-filtros" value="Filtros" onclick="show_block_filters();">
+                                    </div>
                                 </div>
 
                                 <!-- ---------------- -->
@@ -207,6 +210,19 @@
                             </div>
                         </div>
                         
+
+                        <!-- dashboard em desenvolvimento -->
+                        <!-- <div class="content">
+                            <div class="container-dashboard">
+                                <div style="width: 800px;">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                                <div>
+                                    <canvas id="myChart-2"></canvas>
+                                </div>                                
+                            </div>
+                        </div> -->
+                        
                         <div class="table-results-base-geral container-analise">
                             <table class="table-results-resume container-analise">
                                 <thead>
@@ -226,6 +242,9 @@
                                         <th>sup_4h</th>
                                     </tr>
                                 </thead>
+                                <tr class="observer-data-1">
+                                    
+                                </tr>
 
                                 <tbody>
                                 </tbody>
@@ -249,14 +268,17 @@
             {% endif %}
         </div>
     </div>
-
+    <!-- <div>
+        <input type="button" value="teste insersect" id="process-teste" onclick="createInterSectionElements()">
+    </div> -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'dashboards.js' %}"></script>
+    <!-- ------------------------------------------------------------ -->
     <script src="{% static 'pre_analisys.js' %}"></script>
     <script>
-        // createPreAnalysis("http://144.22.230.66/get-data-pre-analise/");
         function get_data(){
             get_data_pre_analise("{% url 'get_data_pre_estrategia' %}");
-        }
-
-        // createPreAnalysis("http://localhost:9000/get-data-pre-analise/");
+        }     
     </script>
 {% endblock %}

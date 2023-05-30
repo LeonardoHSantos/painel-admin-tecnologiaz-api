@@ -205,8 +205,12 @@ async function create_table_results(data){
         }
 
         try {
+            let classObserver = "observer-data";
+            if (i>=10){
+                classObserver = "observer-data-off";
+            }
             table.innerHTML += `
-            <tr>
+            <tr class="observer-data-${i} data-obs ${classObserver}">
                 <td>${cont_aux}</td>
                 <td>${data[i]["from"]}</td>
                 <td>${data[i]["estrategia"]}</td>
@@ -241,6 +245,7 @@ async function create_table_results(data){
             document.querySelector(".content-card-results-consolidado-loss").textContent = tt_loss;
         } catch (error) {}
     }
+    createInterSectionElements();
 }
 // --------
 
@@ -275,6 +280,9 @@ async function execFiltros(){
         document.getElementById("btn-filtrar-pre-analise").style.display = "none";
         document.querySelector(".animation-btn-process").style.display = "flex"; 
         filtrar_registros_pre_analise();
+        setTimeout(()=>{
+            createInterSectionElements();
+        }, 3000);
     } else {
         document.querySelector(".error-inputs-date-valid").style.display = "flex";
     }
@@ -282,7 +290,6 @@ async function execFiltros(){
 }
 // --------
 async function filtrar_registros_pre_analise(){
-
     let input_data_inicial = document.getElementById("input-data-inicial-filtro").value;
     let input_data_final = document.getElementById("input-data-final-filtro").value;
     // ---------
@@ -315,96 +322,113 @@ async function filtrar_registros_pre_analise(){
             let list_index = [];
 
             let progress_filter = 0;
-            for (let i in data_post_final_storage) {
-                const convertExpiration = new Promise((resolve, reject)=>{
-                    let datetime_expiration = convert_string_to_datetime(data_post_final_storage[i]["from"]);
-                    resolve(datetime_expiration);
-                }).then((datetime_expiration)=>{
-
-                    if ( datetime_expiration >= input_data_inicial & datetime_expiration <= input_data_final ) {
-                        list_index.push(i);
-
-                        let direction = data_post_final_storage[i]["sign"];
-                        let result = data_post_final_storage[i]["results"];
-                        
-                        let insert_table = false;
-                        if (input_direcao == "todos"){
-                            insert_table = true;
-                        } else {
-                            if (input_direcao == "call_put") {
-                                if (direction == "call" | direction == "put"){
+            const PromisseProcessTable = new Promise((resolve, reject)=>{
+                for (let i in data_post_final_storage) {
+                    const convertExpiration = new Promise((resolve, reject)=>{
+                        let datetime_expiration = convert_string_to_datetime(data_post_final_storage[i]["from"]);
+                        resolve(datetime_expiration);
+                    }).then((datetime_expiration)=>{
+                        // let observer = new IntersectionObserver(entries =>{
+                        //     console.log(entries);
+                        // });
+                        if ( datetime_expiration >= input_data_inicial & datetime_expiration <= input_data_final ) {
+                            list_index.push(i);
+    
+                            let direction = data_post_final_storage[i]["sign"];
+                            let result = data_post_final_storage[i]["results"];
+                            
+                            let insert_table = false;
+                            if (input_direcao == "todos"){
+                                insert_table = true;
+                            } else {
+                                if (input_direcao == "call_put") {
+                                    if (direction == "call" | direction == "put"){
+                                        insert_table = true;
+                                    }
+                                }
+                                else if (input_direcao != "call_put" & input_direcao == direction) {
                                     insert_table = true;
                                 }
                             }
-                            else if (input_direcao != "call_put" & input_direcao == direction) {
-                                insert_table = true;
-                            }
-                        }
-                        // check input resultado
-                        if (input_resultado != "todos") {
-                            if (input_resultado == "win_loss"){
-                                if (result == "-") {
+                            // check input resultado
+                            if (input_resultado != "todos") {
+                                if (input_resultado == "win_loss"){
+                                    if (result == "-") {
+                                        insert_table = false;
+                                    }
+                                }
+                                else if (input_resultado != result) {
                                     insert_table = false;
                                 }
                             }
-                            else if (input_resultado != result) {
-                                insert_table = false;
-                            }
-                        }
-
-                        if (insert_table == true){
-                            try {
-                                table.innerHTML += `
-                                <tr>
-                                    <td>${cont_aux}</td>
-                                    <td>${data_post_final_storage[i]["from"]}</td>
-                                    <td>${data_post_final_storage[i]["estrategia"]}</td>
-                                    <td>${data_post_final_storage[i]["active_name"]}</td>
-                                    <td>${data_post_final_storage[i]["status_candle"]}</td>
-                                    <td class="${data_post_final_storage[i]["class_name_direction"]}">${direction}</td>
-                                    <td class="${data_post_final_storage[i]["class_name_results"]}" id="table-${i}" onmouseover="show_resume_pre_analise(event);" onmouseout="hide_resume_pre_analise(event);">
-                                        ${result}
-                                        <span class="resume-results-pre-analise data-table-${i}">
-                                            <p>${data_post_final_storage[i-1]["from"]}</p>
-                                            <p>RES M15: ${data_post_final_storage[i-1]["res_15m_extrato_tm"]}</p>
-                                            <p>RES 1H: ${data_post_final_storage[i-1]["res_1h_extrato_tm"]}</p>
-                                            <p>RES 4H: ${data_post_final_storage[i-1]["res_4h_extrato_tm"]}</p>
-
-                                            <p>SUP M15: ${data_post_final_storage[i-1]["sup_15m_extrato_tm"]}</p>
-                                            <p>SUP 1H: ${data_post_final_storage[i-1]["sup_1h_extrato_tm"]}</p>
-                                            <p>SUP 4H: ${data_post_final_storage[i-1]["sup_4h_extrato_tm"]}</p>
-                                        </span>
-                                    </td>
     
-                                    <td>${data_post_final_storage[i]["res_15m_extrato_tm"]}</td>
-                                    <td>${data_post_final_storage[i]["res_1h_extrato_tm"]}</td>
-                                    <td>${data_post_final_storage[i]["res_4h_extrato_tm"]}</td>
-                                    <td>${data_post_final_storage[i]["sup_15m_extrato_tm"]}</td>
-                                    <td>${data_post_final_storage[i]["sup_1h_extrato_tm"]}</td>
-                                    <td>${data_post_final_storage[i]["sup_4h_extrato_tm"]}</td>
-    
-                                </tr>`;
-                                if(result == "win"){
-                                    tt_win = tt_win +1;
-                                } else if (result == "loss"){
-                                    tt_loss = tt_loss +1;
-                                } else if (result == "empate"){
-                                    tt_empate = tt_empate +1;
+                            if (insert_table == true){
+                                let observer_status = "observer-data";
+                                if (i >= 10){
+                                    observer_status = "observer-data-off";
                                 }
-                                tt_confluencias =  tt_win + tt_loss + tt_empate;
-                                document.querySelector(".content-card-tt-results").textContent = cont_aux;
-                                document.querySelector(".content-card-results-consolidado").textContent = tt_confluencias;
-                                document.querySelector(".content-card-results-consolidado-win").textContent = tt_win;
-                                document.querySelector(".content-card-results-consolidado-loss").textContent = tt_loss;
-                                cont_aux = cont_aux + 1;
-                            } catch (error) {
-                                // hide_filter_block();
+                                try {
+                                    table.innerHTML += `
+                                    <tr class="observer-data-${i} data-obs ${observer_status}">
+                                        <td>${cont_aux}</td>
+                                        <td>${data_post_final_storage[i]["from"]}</td>
+                                        <td>${data_post_final_storage[i]["estrategia"]}</td>
+                                        <td>${data_post_final_storage[i]["active_name"]}</td>
+                                        <td>${data_post_final_storage[i]["status_candle"]}</td>
+                                        <td class="${data_post_final_storage[i]["class_name_direction"]}">${direction}</td>
+                                        <td class="${data_post_final_storage[i]["class_name_results"]}" id="table-${i}" onmouseover="show_resume_pre_analise(event);" onmouseout="hide_resume_pre_analise(event);">
+                                            ${result}
+                                            <span class="resume-results-pre-analise data-table-${i}">
+                                                <p>${data_post_final_storage[i-1]["from"]}</p>
+                                                <p>RES M15: ${data_post_final_storage[i-1]["res_15m_extrato_tm"]}</p>
+                                                <p>RES 1H: ${data_post_final_storage[i-1]["res_1h_extrato_tm"]}</p>
+                                                <p>RES 4H: ${data_post_final_storage[i-1]["res_4h_extrato_tm"]}</p>
+    
+                                                <p>SUP M15: ${data_post_final_storage[i-1]["sup_15m_extrato_tm"]}</p>
+                                                <p>SUP 1H: ${data_post_final_storage[i-1]["sup_1h_extrato_tm"]}</p>
+                                                <p>SUP 4H: ${data_post_final_storage[i-1]["sup_4h_extrato_tm"]}</p>
+                                            </span>
+                                        </td>
+        
+                                        <td>${data_post_final_storage[i]["res_15m_extrato_tm"]}</td>
+                                        <td>${data_post_final_storage[i]["res_1h_extrato_tm"]}</td>
+                                        <td>${data_post_final_storage[i]["res_4h_extrato_tm"]}</td>
+                                        <td>${data_post_final_storage[i]["sup_15m_extrato_tm"]}</td>
+                                        <td>${data_post_final_storage[i]["sup_1h_extrato_tm"]}</td>
+                                        <td>${data_post_final_storage[i]["sup_4h_extrato_tm"]}</td>
+        
+                                    </tr>`;
+                                    if(result == "win"){
+                                        tt_win = tt_win +1;
+                                    } else if (result == "loss"){
+                                        tt_loss = tt_loss +1;
+                                    } else if (result == "empate"){
+                                        tt_empate = tt_empate +1;
+                                    }
+                                    tt_confluencias =  tt_win + tt_loss + tt_empate;
+                                    document.querySelector(".content-card-tt-results").textContent = cont_aux;
+                                    document.querySelector(".content-card-results-consolidado").textContent = tt_confluencias;
+                                    document.querySelector(".content-card-results-consolidado-win").textContent = tt_win;
+                                    document.querySelector(".content-card-results-consolidado-loss").textContent = tt_loss;
+                                    cont_aux = cont_aux + 1;
+    
+                                    
+                                  
+                            
+                                } catch (error) {
+                                    // hide_filter_block();
+                                }
                             }
                         }
-                    }
-                });
-            }
-            hide_filter_block();
+                    })
+                }
+                resolve(true)
+            })
+            PromisseProcessTable.then((status_process)=>{
+                // createInterSectionElements();
+                // console.log("acionado observer...")
+                hide_filter_block();
+            })
         } else {
             console.log("status da validação de datas: data inicial maior que data final.");
             console.log(input_data_inicial);
@@ -416,7 +440,97 @@ async function filtrar_registros_pre_analise(){
    
     document.getElementById("btn-filtrar-pre-analise").style.display = "flex";
     document.querySelector(".animation-btn-process").style.display = "none";
+    let obj_results = [
+        {"hora": 9, "result": "loss"},
+        {"hora": 9, "result": "loss"},
+        {"hora": 9, "result": "win"},
+        {"hora": 9, "result": "win"},
+        {"hora": 3, "result": "win"},
+        {"hora": 0, "result": "win"},
+        {"hora": 0, "result": "win"},
+        {"hora": 1, "result": "loss"},
+        {"hora": 1, "result": "win"},
+        {"hora": 1, "result": "win"},
+        {"hora": 1, "result": "win"},
+        {"hora": 1, "result": "win"},
+        {"hora": 1, "result": "win"},
+        {"hora": 2, "result": "loss"},
+        {"hora": 2, "result": "win"},
+        {"hora": 2, "result": "loss"},
+        {"hora": 2, "result": "loss"},
+        {"hora": 7, "result": "loss"},
+        {"hora": 7, "result": "win"},
+        {"hora": 7, "result": "win"},
+        {"hora": 7, "result": "win"},
+        {"hora": 2, "result": "win"},
+        {"hora": 2, "result": "loss"},
+        {"hora": 3, "result": "loss"},
+        {"hora": 3, "result": "win"},
     
+        {"hora": 10, "result": "win"},
+        {"hora": 10, "result": "loss"},
+        {"hora": 10, "result": "loss"},
+        {"hora": 11, "result": "win"},
+        {"hora": 11, "result": "loss"},
+        {"hora": 11, "result": "loss"},
+        {"hora": 20, "result": "win"},
+        {"hora": 20, "result": "loss"},
+        {"hora": 20, "result": "loss"},
+        {"hora": 20, "result": "win"},
+        {"hora": 20, "result": "loss"},
+        {"hora": 20, "result": "loss"},
+    
+        {"hora": 21, "result": "win"},
+        {"hora": 21, "result": "loss"},
+        {"hora": 21, "result": "loss"},
+        {"hora": 22, "result": "win"},
+        {"hora": 22, "result": "loss"},
+        {"hora": 22, "result": "loss"},
+        {"hora": 23, "result": "win"},
+        {"hora": 23, "result": "loss"},
+        {"hora": 23, "result": "loss"},
+        {"hora": 23, "result": "win"},
+        {"hora": 23, "result": "loss"},
+        {"hora": 23, "result": "loss"},
+    ];
+
+    // criação do dashboard - em desenvolvimento
+    // prepareDataToDashboard(obj_results);
+    
+}
+
+// ------------------------- observer
+function createInterSectionElements(){
+    let observer = new IntersectionObserver(entries =>{
+        // console.log(entries);
+        // console.log(entries[0].isIntersecting);
+
+
+        let next_value = parseInt(entries[0].target.className.split(" ")[0].split("-")[2]) +1
+        let cont = 0;
+        for(let i in document.querySelectorAll(".observer-data-off")){
+            if (cont <= 10){
+                try {
+                    document.querySelectorAll(".observer-data-off")[i].classList.remove("observer-data-off"); 
+                    cont += 1;
+                } catch (error) {}
+            }
+        }
+    }, {
+        threshold: [0, .1, .5, 1]
+    });
+    Array.from(document.querySelectorAll(".data-obs")).forEach( element =>{
+        try {
+            if (element != undefined){
+                // let elemnt_class = element.className.split(" ");
+                elemnt_class = document.querySelector(`.${element.className.split(" ")[0]}`)
+                observer.observe(elemnt_class);
+                // console.log(elemnt_class);
+            }
+        } catch (error) {
+            console.log(error) 
+        }
+    });  
 }
 // TABLE PRE ANALISE
 function show_resume_pre_analise(event){

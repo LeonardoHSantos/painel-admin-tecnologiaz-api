@@ -216,7 +216,7 @@ function createDashboardConfigVisaoGeral_2() {
         new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: ['Estratégia 1', 'Estratégia 2', 'Estratégia 3', 'Estratégia 4'],
+            labels: ['Estratégia 1', 'Estratégia 2', 'Estratégia 3', 'Estratégia 4', 'Estratégia 5'],
             datasets: [{
               label: 'Resultados - Estratégias',
               data: [12, 19, 3, 5],

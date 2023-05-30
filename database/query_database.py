@@ -60,29 +60,37 @@ def query_database_estrategia(estrategia, active_name):
                 estrategia_2 = result_query[0][7]
                 estrategia_3 = result_query[0][11]
                 estrategia_4 = result_query[0][15]
-                status_strategy = None
+                estrategia_5 = result_query[0][19]
+                
                 if estrategia == "estrategia_1":
                     check_estrategia = estrategia_1
                     sup_res_m15 = result_query[0][4]
                     sup_res_1h = result_query[0][5]
                     sup_res_4h = result_query[0][6]
-                
+                # ---
                 elif estrategia == "estrategia_2":
                     check_estrategia = estrategia_2
                     sup_res_m15 = result_query[0][8]
                     sup_res_1h = result_query[0][9]
                     sup_res_4h = result_query[0][10]
-
+                # ---
                 elif estrategia == "estrategia_3":
                     check_estrategia = estrategia_3
                     sup_res_m15 = result_query[0][12]
                     sup_res_1h = result_query[0][13]
                     sup_res_4h = result_query[0][14]
+                # ---
                 elif estrategia == "estrategia_4":
                     check_estrategia = estrategia_4
                     sup_res_m15 = result_query[0][16]
                     sup_res_1h = result_query[0][17]
                     sup_res_4h = result_query[0][18]
+                # ---
+                elif estrategia == "estrategia_5":
+                    check_estrategia = estrategia_5
+                    sup_res_m15 = result_query[0][20]
+                    sup_res_1h = result_query[0][21]
+                    sup_res_4h = result_query[0][22]
                 
                 data = {
                     "status_query": True,
@@ -96,7 +104,8 @@ def query_database_estrategia(estrategia, active_name):
                     "estrategia_1": estrategia_1,
                     "estrategia_2": estrategia_2,
                     "estrategia_3": estrategia_3,
-                    "estrategia_4": estrategia_4
+                    "estrategia_4": estrategia_4,
+                    "estrategia_5": estrategia_5,
                 }
                 try:
                     cursor.close()
@@ -134,14 +143,14 @@ def update_database_estrategia(obj_update, estrategia, active_name):
             print(result_query)
             print(f"----------------------- TT QUERY: {tt_query}")
             if tt_query >=1:
+                # status_strategy = {input_status_estrategia}
                 comando_update = f"""
                 UPDATE {TABLE_NAME_ESTRATEGIAS}
                     SET
                         {estrategia}_sup_res_m15 = {input_sup_res_m15},
                         {estrategia}_sup_res_1h = {input_sup_res_1h},
                         {estrategia}_sup_res_4h = {input_sup_res_4h},
-                        {estrategia} = {input_candles_estrategia},
-                        status_strategy = {input_status_estrategia}
+                        {estrategia} = {input_candles_estrategia}
                     WHERE
                         active_name = "{active_name}" and
                         id >= 1;
@@ -202,7 +211,11 @@ def query_database_api():
                     [], # 15 - estrategia_4_sup_res_m15
                     [], # 16 - estrategia_4_sup_res_1h
                     [], # 17 - estrategia_4_sup_res_4h
-                    [], # 18 - status_strategy
+
+                    [], # 18 - estrategia_5
+                    [], # 19 - estrategia_5_sup_res_m15
+                    [], # 20 - estrategia_5_sup_res_1h
+                    [], # 21 - estrategia_5_sup_res_4h
                 ]
 
                 for idx in range(tt_query):
@@ -224,7 +237,11 @@ def query_database_api():
                     list_requests[15].append(result_query[idx][16])
                     list_requests[16].append(result_query[idx][17])
                     list_requests[17].append(result_query[idx][18])
+
                     list_requests[18].append(result_query[idx][19])
+                    list_requests[19].append(result_query[idx][20])
+                    list_requests[20].append(result_query[idx][21])
+                    list_requests[21].append(result_query[idx][22])
                 try:
                     cursor.close()
                     conn["conn"].close()
@@ -245,6 +262,7 @@ def query_visao_geral_config_database_api():
     obj_estrategia_2 = dict()
     obj_estrategia_3 = dict()
     obj_estrategia_4 = dict()
+    obj_estrategia_5 = dict()
     try:
         conn = conn_db_producao()
         cursor = None
@@ -291,6 +309,13 @@ def query_visao_geral_config_database_api():
                     "sup_res_4H": registro[18],
                     }
                 })
+                obj_estrategia_5.update({registro[1]: {
+                    "candles_M5": registro[19],
+                    "sup_res_M15": registro[20],
+                    "sup_res_1H": registro[21],
+                    "sup_res_4H": registro[22],
+                    }
+                })
             
             
             try:
@@ -304,6 +329,7 @@ def query_visao_geral_config_database_api():
                 "obj_estrategia_2": obj_estrategia_2,
                 "obj_estrategia_3": obj_estrategia_3,
                 "obj_estrategia_4": obj_estrategia_4,
+                "obj_estrategia_5": obj_estrategia_5
             }
            
 
@@ -593,6 +619,7 @@ def query_database_results_calc(active_name, strategy_name):
                 "estrategia_2": f"{active_name}-M5-V2",
                 "estrategia_3": f"{active_name}-M5-V3",
                 "estrategia_4": f"{active_name}-M5-V4",
+                "estrategia_5": f"{active_name}-M5-V5",
             }
             
             name_strategy =  obj_estrategias[strategy_name]

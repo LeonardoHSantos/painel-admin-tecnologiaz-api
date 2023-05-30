@@ -251,6 +251,20 @@ ul li a {
     text-decoration: none;
 }
 
+/* NAVBAR CONFIG LINK */
+.content-link-navbar {
+    border: 1px solid;
+    border-color: var(--color-base-1);
+    border-radius: 5px;
+    padding: 0px 2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 215px;
+    box-shadow: var(--box-shadow-1);
+}
+
 /* MSG ERROR FORM REGISTER */
 .msg-error-form-register {
     display: flex;

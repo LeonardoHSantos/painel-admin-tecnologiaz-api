@@ -32,6 +32,10 @@ try {
     let classEditnavbar = document.querySelector(`.link-navbar-${nameClassAux}`);
     classEditnavbar.style.color = "var(--color-white-1)";
     classEditnavbar.style.color = "var(--color-base-1)";
+    let classEditnavbarLI = document.querySelector(`.link-${nameClassAux}`);
+    classEditnavbarLI.classList.add("content-link-navbar");
+    classEditnavbarLI.querySelector("i").style.color = "var(--color-base-1)";
+
 } catch (error) {}
 
 

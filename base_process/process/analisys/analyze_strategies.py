@@ -194,7 +194,7 @@ class AnalyzeData_Strategies:
                                 update_ranking_M5(obj_results=query_resume[1])
                             except Exception as e:
                                 print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
-                            estrategia_4(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V5", version="M5-V5", active=active, status_alert=status_alert)
+                            estrategia_5(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V5", version="M5-V5", active=active, status_alert=status_alert)
         except Exception as e:
             print(f"ERROR DF: {e}")
 

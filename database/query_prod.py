@@ -7,7 +7,8 @@ obj_name_strategies = {
     "estrategia_1":  "PADRAO-M5-V1",
     "estrategia_2":  "PADRAO-M5-V2",
     "estrategia_3":  "PADRAO-M5-V3",
-    "estrategia_4":  "PADRAO-M5-V4"
+    "estrategia_4":  "PADRAO-M5-V4",
+    "estrategia_5":  "PADRAO-M5-V5"
 }
 
 

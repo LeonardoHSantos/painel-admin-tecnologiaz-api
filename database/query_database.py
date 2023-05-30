@@ -478,7 +478,7 @@ def update_database_sign(obj_sign):
             
             elif tt_query == 0:
                 try:
-                    if status_alert not in list_open_types and status_alert != "alert-1min":
+                    if status_alert not in list_open_types and status_alert not in ["alert-1min", "alert-1min-test"]:
                         comando_insert_alert = f'''
                             INSERT INTO {TABLE_NAME_OPERATIONS}
                                 (
@@ -537,7 +537,7 @@ def update_database_sign_result_open_operation(list_actives_check_results, dataf
                 status_candle      = df_check["status_candle"][0]
 
                 
-                list_versions = ["M5-V1", "M5-V2", "M5-V3", "M5-V4"]
+                list_versions = ["M5-V1", "M5-V2", "M5-V3", "M5-V4", "M5-V5"]
                 for version in list_versions:
                     
                     name_strategy = f'{active}-{version}'

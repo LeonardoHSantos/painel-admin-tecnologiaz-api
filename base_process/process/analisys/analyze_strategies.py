@@ -502,14 +502,12 @@ def estrategia_5(estrategia, dataframe, status_alert, padrao, version, active):
             observation = "put - sem conf. sup res"
 
     elif dataframe["status_candle"][id_4] == "alta" and dataframe["status_candle"][id_3] == "alta" and dataframe["status_candle"][id_2] == "baixa" and dataframe["status_candle"][id_1] == "baixa":
-        if dataframe["sup_1h_extrato_tm"][id_1] == 0:
-            if dataframe["sup_15m_extrato_tm"][id_1] >= 2 and dataframe["sup_1h_extrato_tm"][id_1] >= 1 == dataframe["sup_4h_extrato_tm"][id_1] >= 1:
-                direction = "call"
-                result_confluencias = True
-            else:
-                observation = "#1 call - sem conf. sup res"
+        if dataframe["sup_15m_extrato_tm"][id_1] >= 2 and dataframe["sup_1h_extrato_tm"][id_1] >= 1 == dataframe["sup_4h_extrato_tm"][id_1] >= 1:
+            direction = "call"
+            result_confluencias = True
         else:
-            observation = "#2 call - sem conf. sup res"
+            observation = "1 call - sem conf. sup res"
+        
     
     prepare_signal_to_database(dataframe, direction, status_alert, padrao, version, active, observation, result_confluencias,
                                sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h)

@@ -252,16 +252,23 @@ ul li a {
 }
 
 /* NAVBAR CONFIG LINK */
-.content-link-navbar {
+
+.content-link-navbar, ul li {
     border: 1px solid;
-    border-color: var(--color-base-1);
     border-radius: 5px;
     padding: 0px 2px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 215px;
+    width: 180px;
+    border-color: transparent;
+}
+ul li:nth-child(3){
+    width: 220px;
+}
+.content-link-navbar {
+    border-color: var(--color-base-1);
     box-shadow: var(--box-shadow-1);
 }
 

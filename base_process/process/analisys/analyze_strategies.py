@@ -166,6 +166,7 @@ class AnalyzeData_Strategies:
                             except Exception as e:
                                 print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
                             estrategia_1(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V1", version="M5-V1", active=active, status_alert=status_alert)
+                        # ----------------------
                         elif estrategia == "estrategia_2":
                             try:
                                 query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_2")
@@ -173,6 +174,7 @@ class AnalyzeData_Strategies:
                             except Exception as e:
                                 print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
                             estrategia_2(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V2", version="M5-V2", active=active, status_alert=status_alert)
+                        # ----------------------
                         elif estrategia == "estrategia_3":
                             try:
                                 query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_3")
@@ -180,6 +182,7 @@ class AnalyzeData_Strategies:
                             except Exception as e:
                                 print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
                             estrategia_3(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V3", version="M5-V3", active=active, status_alert=status_alert)
+                        # ----------------------
                         elif estrategia == "estrategia_4":
                             try:
                                 query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_4")
@@ -187,7 +190,7 @@ class AnalyzeData_Strategies:
                             except Exception as e:
                                 print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
                             estrategia_4(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V4", version="M5-V4", active=active, status_alert=status_alert)
-                        # ---
+                        # ----------------------
                         elif estrategia == "estrategia_5":
                             try:
                                 query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_5")
@@ -212,6 +215,10 @@ def prepare_signal_to_database(dataframe, direction, status_alert, padrao, versi
         mercado = "otc"
     else:
         mercado = "aberto"
+
+    if version in ["M5-V5"]:
+        status_alert = f"{status_alert}-test"
+    
 
     obj_to_database = {
         "open_time": expiration["open_time"],
@@ -468,9 +475,52 @@ def estrategia_4(estrategia, dataframe, status_alert, padrao, version, active):
     
     prepare_signal_to_database(dataframe, direction, status_alert, padrao, version, active, observation, result_confluencias,
                                sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h)
-    
+
 # ----------------------------------------------------------------------
 def estrategia_5(estrategia, dataframe, status_alert, padrao, version, active):
+    list_idx = list(range(0, len(dataframe.index)))
+    dataframe.index = list_idx
+    print(f"-------------------------------------------------------> estratégia: {estrategia}")
+    print(dataframe[["from", "active_name", "status_candle"]])
+    
+    result_confluencias = False
+    current_id = max(list_idx)
+    
+    id_4 = current_id -3
+    id_3 = current_id -2
+    id_2 = current_id -1
+    id_1 = current_id -0
+    
+    direction = "-"
+    observation = "-"
+    sup_m15  = dataframe["sup_15m_extrato_tm"][id_1]
+    sup_1h   = dataframe["sup_1h_extrato_tm"][id_1]
+    sup_4h   = dataframe["sup_4h_extrato_tm"][id_1]
+    # ---
+    res_m15  = dataframe["res_15m_extrato_tm"][id_1]
+    res_1h  = dataframe["res_1h_extrato_tm"][id_1]
+    res_4h  = dataframe["res_4h_extrato_tm"][id_1]
+
+    if dataframe["status_candle"][id_4] == "baixa" and dataframe["status_candle"][id_3] == "baixa" and dataframe["status_candle"][id_2] == "alta" and dataframe["status_candle"][id_1] == "alta":
+        if dataframe["res_15m_extrato_tm"][id_1] >= 2 and dataframe["res_1h_extrato_tm"][id_1] >= 1 == dataframe["res_4h_extrato_tm"][id_1] >= 1:
+            direction = "put"
+            result_confluencias = True
+        else:
+            observation = "put - sem conf. sup res"
+
+    elif dataframe["status_candle"][id_4] == "alta" and dataframe["status_candle"][id_3] == "alta" and dataframe["status_candle"][id_2] == "baixa" and dataframe["status_candle"][id_1] == "baixa":
+        if dataframe["sup_15m_extrato_tm"][id_1] >= 2 and dataframe["sup_1h_extrato_tm"][id_1] >= 1 == dataframe["sup_4h_extrato_tm"][id_1] >= 1:
+            direction = "call"
+            result_confluencias = True
+        else:
+            observation = "1 call - sem conf. sup res"
+        
+    
+    prepare_signal_to_database(dataframe, direction, status_alert, padrao, version, active, observation, result_confluencias,
+                               sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h)
+
+# ----------------------------------------------------------------------
+def estrategia_6(estrategia, dataframe, status_alert, padrao, version, active):
     list_idx = list(range(0, len(dataframe.index)))
     dataframe.index = list_idx
     print(f"-------------------------------------------------------> estratégia: {estrategia}")

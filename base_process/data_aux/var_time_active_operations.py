@@ -195,34 +195,34 @@ LIST_MINUTES_STRATEGY_4_OPEN_OPERATION = {
 
 # implementação 30/05/2023
 LIST_MINUTES_STRATEGY_5 = {
-    0: "alert-5min-test",
-    1: "alert-4min-test",
-    2: "alert-3min-test",
-    3: "alert-2min-test",
-    4: "alert-1min-test",
+    0: "alert-5min",
+    1: "alert-4min",
+    2: "alert-3min",
+    3: "alert-2min",
+    4: "alert-1min",
     
-    15: "alert-5min-test",
-    16: "alert-4min-test",
-    17: "alert-3min-test",
-    18: "alert-2min-test",
-    19: "alert-1min-test",
+    15: "alert-5min",
+    16: "alert-4min",
+    17: "alert-3min",
+    18: "alert-2min",
+    19: "alert-1min",
     
-    30: "alert-5min-test",
-    31: "alert-4min-test",
-    32: "alert-3min-test",
-    33: "alert-2min-test",
-    34: "alert-1min-test",
+    30: "alert-5min",
+    31: "alert-4min",
+    32: "alert-3min",
+    33: "alert-2min",
+    34: "alert-1min",
     
-    45: "alert-5min-test",
-    46: "alert-4min-test",
-    47: "alert-3min-test",
-    48: "alert-2min-test",
-    49: "alert-1min-test"
+    45: "alert-5min",
+    46: "alert-4min",
+    47: "alert-3min",
+    48: "alert-2min",
+    49: "alert-1min"
 }
 
 LIST_MINUTES_STRATEGY_5_OPEN_OPERATION = {
-    4: "alert-open-operation-test",
-    19: "alert-open-operation-test",
-    34: "alert-open-operation-test",
-    49: "alert-open-operation-test"
+    4: "alert-open-operation",
+    19: "alert-open-operation",
+    34: "alert-open-operation",
+    49: "alert-open-operation"
 }

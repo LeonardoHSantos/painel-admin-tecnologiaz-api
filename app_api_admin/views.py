@@ -195,6 +195,7 @@ def visao_geral_config(request):
             "obj_estrategia_3": base_config["obj_estrategia_3"],
             "obj_estrategia_4": base_config["obj_estrategia_4"],  
             "obj_estrategia_5": base_config["obj_estrategia_5"], 
+            "obj_estrategia_6": base_config["obj_estrategia_6"], 
         }
         return JsonResponse(context)
 # -------------------

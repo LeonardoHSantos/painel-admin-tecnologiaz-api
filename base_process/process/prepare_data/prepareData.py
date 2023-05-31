@@ -29,7 +29,8 @@ class PrepareData:
             list(zip(
                 list_requests[0], list_requests[1], list_requests[2], list_requests[3], list_requests[4], list_requests[5], list_requests[6], list_requests[7], list_requests[8], list_requests[9],
                 list_requests[10], list_requests[11], list_requests[12], list_requests[13], list_requests[14], list_requests[15], list_requests[16], list_requests[17],
-                list_requests[18], list_requests[19], list_requests[20], list_requests[21]
+                list_requests[18], list_requests[19], list_requests[20], list_requests[21], # padrão 5
+                list_requests[22], list_requests[23], list_requests[24], list_requests[25], # padrão 6
             )),
             columns=[
             "active_name", "active_id",
@@ -37,7 +38,8 @@ class PrepareData:
             "estrategia_2", "estrategia_2_sup_res_m15", "estrategia_2_sup_res_1h", "estrategia_2_sup_res_4h",
             "estrategia_3", "estrategia_3_sup_res_m15", "estrategia_3_sup_res_1h", "estrategia_3_sup_res_4h",
             "estrategia_4", "estrategia_4_sup_res_m15", "estrategia_4_sup_res_1h", "estrategia_4_sup_res_4h",
-            "estrategia_5", "estrategia_5_sup_res_m15", "estrategia_5_sup_res_1h", "estrategia_5_sup_res_4h"
+            "estrategia_5", "estrategia_5_sup_res_m15", "estrategia_5_sup_res_1h", "estrategia_5_sup_res_4h",
+            "estrategia_6", "estrategia_6_sup_res_m15", "estrategia_6_sup_res_1h", "estrategia_6_sup_res_4h"
             ]
         )
     

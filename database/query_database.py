@@ -61,6 +61,7 @@ def query_database_estrategia(estrategia, active_name):
                 estrategia_3 = result_query[0][11]
                 estrategia_4 = result_query[0][15]
                 estrategia_5 = result_query[0][19]
+                estrategia_6 = result_query[0][23]
                 
                 if estrategia == "estrategia_1":
                     check_estrategia = estrategia_1
@@ -91,6 +92,12 @@ def query_database_estrategia(estrategia, active_name):
                     sup_res_m15 = result_query[0][20]
                     sup_res_1h = result_query[0][21]
                     sup_res_4h = result_query[0][22]
+                # ---
+                elif estrategia == "estrategia_6":
+                    check_estrategia = estrategia_6
+                    sup_res_m15 = result_query[0][24]
+                    sup_res_1h = result_query[0][25]
+                    sup_res_4h = result_query[0][26]
                 
                 data = {
                     "status_query": True,
@@ -106,6 +113,7 @@ def query_database_estrategia(estrategia, active_name):
                     "estrategia_3": estrategia_3,
                     "estrategia_4": estrategia_4,
                     "estrategia_5": estrategia_5,
+                    "estrategia_6": estrategia_6,
                 }
                 try:
                     cursor.close()
@@ -216,6 +224,11 @@ def query_database_api():
                     [], # 19 - estrategia_5_sup_res_m15
                     [], # 20 - estrategia_5_sup_res_1h
                     [], # 21 - estrategia_5_sup_res_4h
+                    # ----
+                    [], # 22 - estrategia_6
+                    [], # 23 - estrategia_6_sup_res_m15
+                    [], # 24 - estrategia_6_sup_res_1h
+                    [], # 25 - estrategia_6_sup_res_4h
                 ]
 
                 for idx in range(tt_query):
@@ -242,6 +255,11 @@ def query_database_api():
                     list_requests[19].append(result_query[idx][20])
                     list_requests[20].append(result_query[idx][21])
                     list_requests[21].append(result_query[idx][22])
+                    # ----
+                    list_requests[22].append(result_query[idx][23])
+                    list_requests[23].append(result_query[idx][24])
+                    list_requests[24].append(result_query[idx][25])
+                    list_requests[25].append(result_query[idx][26])
                 try:
                     cursor.close()
                     conn["conn"].close()
@@ -263,6 +281,7 @@ def query_visao_geral_config_database_api():
     obj_estrategia_3 = dict()
     obj_estrategia_4 = dict()
     obj_estrategia_5 = dict()
+    obj_estrategia_6 = dict()
     try:
         conn = conn_db_producao()
         cursor = None
@@ -316,6 +335,13 @@ def query_visao_geral_config_database_api():
                     "sup_res_4H": registro[22],
                     }
                 })
+                obj_estrategia_6.update({registro[1]: {
+                    "candles_M5": registro[23],
+                    "sup_res_M15": registro[24],
+                    "sup_res_1H": registro[25],
+                    "sup_res_4H": registro[26],
+                    }
+                })
             
             
             try:
@@ -329,7 +355,8 @@ def query_visao_geral_config_database_api():
                 "obj_estrategia_2": obj_estrategia_2,
                 "obj_estrategia_3": obj_estrategia_3,
                 "obj_estrategia_4": obj_estrategia_4,
-                "obj_estrategia_5": obj_estrategia_5
+                "obj_estrategia_5": obj_estrategia_5,
+                "obj_estrategia_6": obj_estrategia_6
             }
            
 
@@ -537,7 +564,7 @@ def update_database_sign_result_open_operation(list_actives_check_results, dataf
                 status_candle      = df_check["status_candle"][0]
 
                 
-                list_versions = ["M5-V1", "M5-V2", "M5-V3", "M5-V4", "M5-V5"]
+                list_versions = ["M5-V1", "M5-V2", "M5-V3", "M5-V4", "M5-V5", "M5-V6"]
                 for version in list_versions:
                     
                     name_strategy = f'{active}-{version}'
@@ -621,6 +648,7 @@ def query_database_results_calc(active_name, strategy_name):
                 "estrategia_3": f"{active_name}-M5-V3",
                 "estrategia_4": f"{active_name}-M5-V4",
                 "estrategia_5": f"{active_name}-M5-V5",
+                "estrategia_6": f"{active_name}-M5-V6",
             }
             
             name_strategy =  obj_estrategias[strategy_name]

@@ -8,7 +8,8 @@ obj_name_strategies = {
     "estrategia_2":  "PADRAO-M5-V2",
     "estrategia_3":  "PADRAO-M5-V3",
     "estrategia_4":  "PADRAO-M5-V4",
-    "estrategia_5":  "PADRAO-M5-V5"
+    "estrategia_5":  "PADRAO-M5-V5",
+    "estrategia_6":  "PADRAO-M5-V6"
 }
 
 
@@ -367,7 +368,8 @@ def check_sign_ranking(expiration):
                 "PADRAO-M5-V2": "estrategia_2",
                 "PADRAO-M5-V3": "estrategia_3",
                 "PADRAO-M5-V4": "estrategia_4",
-                "PADRAO-M5-V5": "estrategia_5"
+                "PADRAO-M5-V5": "estrategia_5",
+                "PADRAO-M5-V6": "estrategia_6",
             }
             if tt_query >= 1:
                 for sign in result_query:

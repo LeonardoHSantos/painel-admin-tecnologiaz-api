@@ -6,8 +6,8 @@ from base_process.wss.client import WS_Client
 from base_process.data_aux.var_aux import URL_WSS
 from base_process.process.expirations.expiration_candle import datetime_now
 from database.query_database import update_database_sign_result_open_operation
-from base_process.data_aux.var_time_active_operations import LIST_MINUTES_STRATEGY_1, LIST_MINUTES_STRATEGY_2, LIST_MINUTES_STRATEGY_3, LIST_MINUTES_STRATEGY_4, LIST_MINUTES_STRATEGY_5
-from base_process.data_aux.var_time_active_operations import LIST_MINUTES_STRATEGY_1_OPEN_OPERATION, LIST_MINUTES_STRATEGY_2_OPEN_OPERATION, LIST_MINUTES_STRATEGY_3_OPEN_OPERATION, LIST_MINUTES_STRATEGY_4_OPEN_OPERATION, LIST_MINUTES_STRATEGY_5_OPEN_OPERATION
+from base_process.data_aux.var_time_active_operations import LIST_MINUTES_STRATEGY_1, LIST_MINUTES_STRATEGY_2, LIST_MINUTES_STRATEGY_3, LIST_MINUTES_STRATEGY_4, LIST_MINUTES_STRATEGY_5, LIST_MINUTES_STRATEGY_6
+from base_process.data_aux.var_time_active_operations import LIST_MINUTES_STRATEGY_1_OPEN_OPERATION, LIST_MINUTES_STRATEGY_2_OPEN_OPERATION, LIST_MINUTES_STRATEGY_3_OPEN_OPERATION, LIST_MINUTES_STRATEGY_4_OPEN_OPERATION, LIST_MINUTES_STRATEGY_5_OPEN_OPERATION, LIST_MINUTES_STRATEGY_6_OPEN_OPERATION
 
 
 from database.query_database import query_database_api, update_status_api
@@ -118,6 +118,7 @@ class ProcessAPI:
         except Exception as e:
             update_status_api(0)
     
+    # --------------------------------------------------------------------------- CHECK PROCESS OPERATIONS
     def process_operation(self, minutes, type_process):
         # -------------------------------------------------------------- COLETA DADOS DO BANCO
         actives_database = query_database_api()
@@ -160,6 +161,10 @@ class ProcessAPI:
             if minutes in LIST_MINUTES_STRATEGY_5.keys():
                 list_estrategias.append("estrategia_5")
                 check_status_alert = LIST_MINUTES_STRATEGY_5[minutes]
+            # ---
+            if minutes in LIST_MINUTES_STRATEGY_6.keys():
+                list_estrategias.append("estrategia_6")
+                check_status_alert = LIST_MINUTES_STRATEGY_6[minutes]
             # ------------------------------------------
         
         elif type_process == "process_open_operation":
@@ -182,6 +187,10 @@ class ProcessAPI:
             if minutes in LIST_MINUTES_STRATEGY_5_OPEN_OPERATION.keys():
                 list_estrategias.append("estrategia_5")
                 check_status_alert = LIST_MINUTES_STRATEGY_5_OPEN_OPERATION[minutes]
+            # ---
+            if minutes in LIST_MINUTES_STRATEGY_6_OPEN_OPERATION.keys():
+                list_estrategias.append("estrategia_6")
+                check_status_alert = LIST_MINUTES_STRATEGY_6_OPEN_OPERATION[minutes]
             # ------------------------------------------
         
         print(f"\n\n ########### SERÁ ANALISADO OS PADRÃOES: {list_estrategias} ########### \n\n")
@@ -216,7 +225,7 @@ class ProcessAPI:
             print("---> CICLO SEM PADRÃO PARA ANALISAR - AGUARDAR...")
         # dataframe_candles.to_excel("base teste.xlsx")
         self.obj_wss.dataframes_candles.clear()
-
+    
     # --------------------------------------------------------------------------- CHECK RESULTS OPERATIONS
     def process_check_results_operations(self):
         # -------------------------------------------------------------- COLETA DADOS DO BANCO

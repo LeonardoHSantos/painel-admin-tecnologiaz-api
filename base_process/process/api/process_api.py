@@ -6,8 +6,8 @@ from base_process.wss.client import WS_Client
 from base_process.data_aux.var_aux import URL_WSS
 from base_process.process.expirations.expiration_candle import datetime_now
 from database.query_database import update_database_sign_result_open_operation
-from base_process.data_aux.var_time_active_operations import LIST_MINUTES_STRATEGY_1, LIST_MINUTES_STRATEGY_2, LIST_MINUTES_STRATEGY_3, LIST_MINUTES_STRATEGY_4, LIST_MINUTES_STRATEGY_5, LIST_MINUTES_STRATEGY_6
-from base_process.data_aux.var_time_active_operations import LIST_MINUTES_STRATEGY_1_OPEN_OPERATION, LIST_MINUTES_STRATEGY_2_OPEN_OPERATION, LIST_MINUTES_STRATEGY_3_OPEN_OPERATION, LIST_MINUTES_STRATEGY_4_OPEN_OPERATION, LIST_MINUTES_STRATEGY_5_OPEN_OPERATION, LIST_MINUTES_STRATEGY_6_OPEN_OPERATION
+from base_process.data_aux.var_time_active_operations import LIST_MINUTES_STRATEGY_1, LIST_MINUTES_STRATEGY_2, LIST_MINUTES_STRATEGY_3, LIST_MINUTES_STRATEGY_4, LIST_MINUTES_STRATEGY_5, LIST_MINUTES_STRATEGY_6, LIST_MINUTES_STRATEGY_7
+from base_process.data_aux.var_time_active_operations import LIST_MINUTES_STRATEGY_1_OPEN_OPERATION, LIST_MINUTES_STRATEGY_2_OPEN_OPERATION, LIST_MINUTES_STRATEGY_3_OPEN_OPERATION, LIST_MINUTES_STRATEGY_4_OPEN_OPERATION, LIST_MINUTES_STRATEGY_5_OPEN_OPERATION, LIST_MINUTES_STRATEGY_6_OPEN_OPERATION, LIST_MINUTES_STRATEGY_7_OPEN_OPERATION
 
 
 from database.query_database import query_database_api, update_status_api
@@ -165,6 +165,10 @@ class ProcessAPI:
             if minutes in LIST_MINUTES_STRATEGY_6.keys():
                 list_estrategias.append("estrategia_6")
                 check_status_alert = LIST_MINUTES_STRATEGY_6[minutes]
+            # ---
+            if minutes in LIST_MINUTES_STRATEGY_7.keys():
+                list_estrategias.append("estrategia_7")
+                check_status_alert = LIST_MINUTES_STRATEGY_7[minutes]
             # ------------------------------------------
         
         elif type_process == "process_open_operation":
@@ -191,6 +195,10 @@ class ProcessAPI:
             if minutes in LIST_MINUTES_STRATEGY_6_OPEN_OPERATION.keys():
                 list_estrategias.append("estrategia_6")
                 check_status_alert = LIST_MINUTES_STRATEGY_6_OPEN_OPERATION[minutes]
+            # ---
+            if minutes in LIST_MINUTES_STRATEGY_7_OPEN_OPERATION.keys():
+                list_estrategias.append("estrategia_7")
+                check_status_alert = LIST_MINUTES_STRATEGY_7_OPEN_OPERATION[minutes]
             # ------------------------------------------
         
         print(f"\n\n ########### SERÁ ANALISADO OS PADRÃOES: {list_estrategias} ########### \n\n")

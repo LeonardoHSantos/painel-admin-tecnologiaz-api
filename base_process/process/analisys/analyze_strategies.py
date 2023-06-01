@@ -206,6 +206,14 @@ class AnalyzeData_Strategies:
                             except Exception as e:
                                 print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
                             estrategia_6(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V6", version="M5-V6", active=active, status_alert=status_alert)
+                        # ----------------------
+                        elif estrategia == "estrategia_7":
+                            try:
+                                query_resume = query_operations_resume_M5(active_name=active, estrategia="estrategia_7")
+                                update_ranking_M5(obj_results=query_resume[1])
+                            except Exception as e:
+                                print(f"#### ERRRO PROCESS UPDATE RANK | ERROR: {e} ### ")
+                            estrategia_7(estrategia=estrategia, dataframe=df_timeframe_5M, padrao="PADRAO-M5-V7", version="M5-V7", active=active, status_alert=status_alert)
         except Exception as e:
             print(f"ERROR DF: {e}")
 
@@ -571,3 +579,54 @@ def estrategia_6(estrategia, dataframe, status_alert, padrao, version, active):
     prepare_signal_to_database(dataframe, direction, status_alert, padrao, version, active, observation, result_confluencias,
                                sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h)
     
+# ----------------------------------------------------------------------
+def estrategia_7(estrategia, dataframe, status_alert, padrao, version, active):
+    list_idx = list(range(0, len(dataframe.index)))
+    dataframe.index = list_idx
+    print(f"-------------------------------------------------------> estratégia: {estrategia}")
+    print(dataframe[["from", "active_name", "status_candle"]])
+    
+    result_confluencias = False
+    current_id = max(list_idx)
+    
+    
+    id_6 = current_id -5
+    id_5 = current_id -4
+    id_4 = current_id -3
+    id_3 = current_id -2
+    id_2 = current_id -1
+    id_1 = current_id -0
+    
+    direction = "-"
+    observation = "-"
+    sup_m15  = dataframe["sup_15m_extrato_tm"][id_1]
+    sup_1h   = dataframe["sup_1h_extrato_tm"][id_1]
+    sup_4h   = dataframe["sup_4h_extrato_tm"][id_1]
+    # ---
+    res_m15  = dataframe["res_15m_extrato_tm"][id_1]
+    res_1h  = dataframe["res_1h_extrato_tm"][id_1]
+    res_4h  = dataframe["res_4h_extrato_tm"][id_1]
+
+    if dataframe["status_candle"][id_6] == "baixa" and dataframe["status_candle"][id_5] == "baixa" and dataframe["status_candle"][id_4] == "alta" and dataframe["status_candle"][id_1] == "baixa":
+        if dataframe["status_candle"][id_3] == "alta" or dataframe["status_candle"][id_2] == "alta":
+            if dataframe["res_15m_extrato_tm"][id_1] >= 2 or dataframe["res_1h_extrato_tm"][id_1] >= 1 == dataframe["res_4h_extrato_tm"][id_1] >= 1:
+                direction = "put"
+                result_confluencias = True
+            else:
+                observation = "#1 -put - sem conf. sup res"
+        else:
+            observation = "#2 -put - sem conf. sup res"
+
+    if dataframe["status_candle"][id_6] == "alta" and dataframe["status_candle"][id_5] == "alta" and dataframe["status_candle"][id_4] == "baixa" and dataframe["status_candle"][id_1] == "alta":
+        if dataframe["status_candle"][id_3] == "baixa" or dataframe["status_candle"][id_2] == "baixa":
+            if dataframe["sup_15m_extrato_tm"][id_1] >= 2 or dataframe["sup_1h_extrato_tm"][id_1] >= 1 == dataframe["sup_4h_extrato_tm"][id_1] >= 1:
+                direction = "call"
+                result_confluencias = True
+            else:
+                observation = "#1 -call - sem conf. sup res"
+        else:
+            observation = "#2 -call - sem conf. sup res"
+        
+    
+    prepare_signal_to_database(dataframe, direction, status_alert, padrao, version, active, observation, result_confluencias,
+                               sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h)

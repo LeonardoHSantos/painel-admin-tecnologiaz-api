@@ -244,6 +244,13 @@ def get_data_pre_estrategia(request):
                 --> data_fim: {data_fim}
             """)
             data = json.loads(requests.post(url=f"http://{IP_SERVER_API_PRE_ANALISE}/run-analysis/", data= json.dumps(data)).content)
+            
+            # import pandas as pd
+            # obj_to_html = json.loads(data["data_to_html"])
+            # df = pd.DataFrame(obj_to_html)
+            # df.to_excel("analise.xlsx")
+            # print(df)
+            
             return JsonResponse(data)
         except Exception as e:
             print(f" #### ERRO AO PROCESSAR PRE ANÁLISE | ERROR: {e}")
@@ -385,7 +392,7 @@ def query_results_operations_get_data_dashboard(request):
             print(e)
             return JsonResponse({"code": 400})
 
-
+# -------------------
 @login_required(login_url="login_admin")
 def painel_config_test(request):
     if request.method == "GET":
@@ -397,4 +404,36 @@ def painel_config_test(request):
             "list_padroes": LIST_PADROES,
             "list_alertas": LIST_ALERTAS,
         }
+        
         return render(request, "app/painel_test.html", context=context)
+# ---
+# @login_required(login_url="login_admin")
+def get_data_temp(request): # request
+    print(request.POST)
+    print(request.body)
+    import pandas as pd
+    data = pd.read_excel("analise.xlsx")
+    print(data.info())
+    data_to_html = dict()
+    for i in data.index:
+        valor = {
+            f"{i}":
+            {
+                "from": data["from"][i],
+                "active_name": data["active_name"][i],
+                "status_candle": data["status_candle"][i],
+                "sign": data["sign"][i],
+                "results": data["results"][i],
+                "estrategia": data["estrategia"][i],
+                "class_name_results": data["class_name_results"][i],
+                "class_name_direction": data["class_name_direction"][i],
+                "res_15m_extrato_tm": int(data["res_15m_extrato_tm"][i]),
+                "res_1h_extrato_tm": int(data["res_1h_extrato_tm"][i]),
+                "res_4h_extrato_tm": int(data["res_4h_extrato_tm"][i]),
+                "sup_15m_extrato_tm": int(data["sup_15m_extrato_tm"][i]),
+                "sup_1h_extrato_tm": int(data["sup_1h_extrato_tm"][i]),
+                "sup_4h_extrato_tm": int(data["sup_4h_extrato_tm"][i]),
+            }}
+        data_to_html.update(valor)
+    # print(data_to_html)
+    return JsonResponse(data_to_html)

@@ -19,6 +19,7 @@ urlpatterns = [
     path("get-data-pre-analise/", views.get_data_pre_estrategia, name="get_data_pre_estrategia"),
 
 
-    path("painel-config-test/", views.painel_config_test, name="painel_config_test"),
+    # path("painel-config-test/", views.painel_config_test, name="painel_config_test"),
+    # path("get-data-temp/", views.get_data_temp, name="get_data_temp"),
     # path("instrucoes-painel/", views.instrucoes_painel, name="instrucoes_painel"),
 ]

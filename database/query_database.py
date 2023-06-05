@@ -441,7 +441,12 @@ def query_status_api():
             except Exception as e:
                 print(f"ERROR UPDATE 2 | ERROR: {e}")
             
-            return {"status_api": result_query[0][1], "email": result_query[0][2]}
+            return {
+                "status_api": result_query[0][1],
+                "email": result_query[0][2],
+                "status_api_2": result_query[1][1],
+                "email_2": result_query[1][2],
+                }
         else:
             return {"status_api": False}
 

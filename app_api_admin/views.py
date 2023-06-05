@@ -271,7 +271,9 @@ def autenticao_iqoption(request):
         context = {
             "bool_status_api": bool_status_api,
             "status_api": q["status_api"],
-            "email": q["email"]
+            "email": q["email"],
+            "status_api_2": q["status_api_2"],
+            "email_2": q["email_2"],
         }
         return render(request, "app/autenticacao_broker.html", context)
     elif request.method == "POST":

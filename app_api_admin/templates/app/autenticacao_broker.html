@@ -22,10 +22,11 @@
             <div class="content-form">
                 <div class="block-user-form">
                     <div class="block-login">
-                        <h1>Autenticação IQ Option</h1>
+                        <h1>Autenticação IQ Option - APP 1</h1>
+                        <h3 style="text-align: center;">estratégias: 1, 2, 3 e 4.</h3>
                     </div>
                 </div>
-
+    
                 <form action="{% url 'autenticacao_iqoption' %}" id="form-config-admin-auth">
                     <!-- onchange="alterSelectInputs(event);" -->
                     {% csrf_token %}
@@ -61,18 +62,59 @@
                 </form>
             </div>
         </div>
-        <div class="instrucoes-start-stop-api ">
-            <div class="content-instrucoes">
-                <p> 1 - Para <span class="destaque-intrucao"> ativar </span> a API é necessário informar o <span class="destaque-intrucao"> usuário </span> e <span class="destaque-intrucao"> senha </span> da conta IQ Option (senha com no mínimo 5 caracteres).</p>
-                <p> 2 - Para <span class="destaque-intrucao"> desativar </span> a API basta informar o <span class="destaque-intrucao"> usuário </span> da conta IQ Option (é solicitado o preenchimento de qualquer senha para segurança da ação).</p>
-                <p> 3 - Aguarde e notificação no canto superior direito da tela com a confirmação da ação desejada.</p>
-                <img src="{% static 'start-stop-api.gif' %}" alt="">
+        <div class="form-config-estrategias">
+            <div class="content-form">
+                <div class="block-user-form">
+                    <div class="block-login">
+                        <h1>Autenticação IQ Option - APP 2</h1>
+                        <h3 style="text-align: center;">estratégias: 5, 6 e 7.</h3>
+                    </div>
+                </div>
+    
+                <form action="{% url 'autenticacao_iqoption' %}" id="form-config-admin-auth-app-2">
+                    <!-- onchange="alterSelectInputs(event);" -->
+                    {% csrf_token %}
+                    <div class="form-control-api">
+                        <p>Status API:</p>
+                        <span class="control-status-api">
+                            <select name="status-api-app-2" id="status-api-app-2" class="{{ status_api_2 }}">
+                                <option value="0">Desligada</option>
+                                <option value="1">Ligada</option>
+                            </select> 
+                        </span>
+                    </div>
+                    <div class="block-input-credencials-user-iqoption">
+                        <div class="inputs-credencials-user-iqoption">
+                            <label for="username-iqoption-app-2">Usuário</label>
+                            <input type="email" name="username-iqoption-app-2" id="username-iqoption-app-2" value="{{ email_2 }}" placeholder="email..." required>
+                        </div>
+                        <div class="inputs-credencials-user-iqoption-password">
+                            <label for="password-iqoption-app-2">Senha</label>
+                            <input type="password" name="password-iqoption-app-2" id="password-iqoption-app-2" value="{{ password_2 }}" placeholder="senha..." required>
+                            <div class="icons-password-2">
+                                <i class="fa-solid fa-lock" onclick="show_password_2(event);"></i>
+                            </div>
+                            <!-- <i class="fa-solid fa-unlock"></i> -->
+                        </div>
+                        <!-- <div class="alert-input-password">
+                            <p>Para manter a segurança da sua conta IQ Option apenas o email será salvo no banco de dados.</p>
+                        </div> -->
+                    </div>
+                    <div class="btn-control-api">
+                        <input type="submit" value="Salvar" id="save-form-control-api-app-2" onclick="controlAPI_process_app_2();">
+                    </div> 
+                </form>
             </div>
         </div>
-    </div>
+    
+    
+</div>
     <script>
         function controlAPI_process(){
             controlAPI("{% url 'start_api' %}", "{% url 'stop_api' %}")
+        }
+        function controlAPI_process_app_2(){
+            controlAPI_app_2("http://localhost:9000/v2/start-api/", "http://localhost:9000/v2/stop-api/")
         }
     </script>
     <script src="{% static 'control_api.js' %}"></script>

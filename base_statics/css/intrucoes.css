@@ -35,7 +35,8 @@
 .border-success-input {
     border: 1px solid #1eff00;
 }
-.icons-password {
+.icons-password,
+.icons-password-2 {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -44,7 +45,8 @@
     float: right;
     right: 0px;
 }
-.icons-password i {
+.icons-password i,
+.icons-password-2 i {
     position: absolute;
     right: 105px;
     cursor: pointer;

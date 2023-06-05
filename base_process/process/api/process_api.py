@@ -157,18 +157,18 @@ class ProcessAPI:
             if minutes in LIST_MINUTES_STRATEGY_4.keys():
                 list_estrategias.append("estrategia_4")
                 check_status_alert = LIST_MINUTES_STRATEGY_4[minutes]
-            # ---
-            if minutes in LIST_MINUTES_STRATEGY_5.keys():
-                list_estrategias.append("estrategia_5")
-                check_status_alert = LIST_MINUTES_STRATEGY_5[minutes]
-            # ---
-            if minutes in LIST_MINUTES_STRATEGY_6.keys():
-                list_estrategias.append("estrategia_6")
-                check_status_alert = LIST_MINUTES_STRATEGY_6[minutes]
-            # ---
-            if minutes in LIST_MINUTES_STRATEGY_7.keys():
-                list_estrategias.append("estrategia_7")
-                check_status_alert = LIST_MINUTES_STRATEGY_7[minutes]
+            # # ---
+            # if minutes in LIST_MINUTES_STRATEGY_5.keys():
+            #     list_estrategias.append("estrategia_5")
+            #     check_status_alert = LIST_MINUTES_STRATEGY_5[minutes]
+            # # ---
+            # if minutes in LIST_MINUTES_STRATEGY_6.keys():
+            #     list_estrategias.append("estrategia_6")
+            #     check_status_alert = LIST_MINUTES_STRATEGY_6[minutes]
+            # # ---
+            # if minutes in LIST_MINUTES_STRATEGY_7.keys():
+            #     list_estrategias.append("estrategia_7")
+            #     check_status_alert = LIST_MINUTES_STRATEGY_7[minutes]
             # ------------------------------------------
         
         elif type_process == "process_open_operation":
@@ -187,18 +187,18 @@ class ProcessAPI:
             if minutes in LIST_MINUTES_STRATEGY_4_OPEN_OPERATION.keys():
                 list_estrategias.append("estrategia_4")
                 check_status_alert = LIST_MINUTES_STRATEGY_4_OPEN_OPERATION[minutes]
-            # ---
-            if minutes in LIST_MINUTES_STRATEGY_5_OPEN_OPERATION.keys():
-                list_estrategias.append("estrategia_5")
-                check_status_alert = LIST_MINUTES_STRATEGY_5_OPEN_OPERATION[minutes]
-            # ---
-            if minutes in LIST_MINUTES_STRATEGY_6_OPEN_OPERATION.keys():
-                list_estrategias.append("estrategia_6")
-                check_status_alert = LIST_MINUTES_STRATEGY_6_OPEN_OPERATION[minutes]
-            # ---
-            if minutes in LIST_MINUTES_STRATEGY_7_OPEN_OPERATION.keys():
-                list_estrategias.append("estrategia_7")
-                check_status_alert = LIST_MINUTES_STRATEGY_7_OPEN_OPERATION[minutes]
+            # # ---
+            # if minutes in LIST_MINUTES_STRATEGY_5_OPEN_OPERATION.keys():
+            #     list_estrategias.append("estrategia_5")
+            #     check_status_alert = LIST_MINUTES_STRATEGY_5_OPEN_OPERATION[minutes]
+            # # ---
+            # if minutes in LIST_MINUTES_STRATEGY_6_OPEN_OPERATION.keys():
+            #     list_estrategias.append("estrategia_6")
+            #     check_status_alert = LIST_MINUTES_STRATEGY_6_OPEN_OPERATION[minutes]
+            # # ---
+            # if minutes in LIST_MINUTES_STRATEGY_7_OPEN_OPERATION.keys():
+            #     list_estrategias.append("estrategia_7")
+            #     check_status_alert = LIST_MINUTES_STRATEGY_7_OPEN_OPERATION[minutes]
             # ------------------------------------------
         
         print(f"\n\n ########### SERÁ ANALISADO OS PADRÃOES: {list_estrategias} ########### \n\n")

@@ -6,6 +6,10 @@ from database.query_prod import query_operations_resume_M5, update_ranking_M5
 
 from base_process.process.expirations.expiration_candle import expiration_operation_M5
 
+
+from database.conn import conn_db, conn_db_producao
+from config_auth import TABLE_NAME_ESTRATEGIAS, TABLE_NAME_STATUS_API, TABLE_NAME_OPERATIONS
+
 class AnalyzeData_Strategies:
     def process_sup_res(dataframe_candles, status_alert):
         list_estrategies = list(dataframe_candles["estrategias"].drop_duplicates(keep="last"))
@@ -232,9 +236,40 @@ def prepare_signal_to_database(dataframe, direction, status_alert, padrao, versi
     else:
         mercado = "aberto"
 
-    list_tests = ["M5-V5", "M5-V6", "M5-V7"]
+    list_tests = ["M5-V6", "M5-V7"] # "M5-V5"
     if version in list_tests:
         status_alert = f"{status_alert}-test"
+
+    if version == "M5-V2":
+        try:
+            conn = conn_db_producao()
+            cursor = None
+            if conn["status_conn_db"] == True:
+                cursor = conn["conn"].cursor()
+                name_strategy = f"{active}-{version}",
+                comando_query = f'''
+                SELECT
+                    id, direction, status_alert
+                FROM {TABLE_NAME_OPERATIONS}
+                WHERE
+                    name_strategy = "{name_strategy}" and expiration_alert = "{expiration["expiration_alert"]}"
+                '''
+                cursor.execute(comando_query)
+                result_query    = cursor.fetchall()
+                tt_query = len(result_query)
+                print(f"\n\n ### RESULTS CHECK M5-V2 | RESULTS: {result_query}\n\n")
+                if tt_query >= 1:
+                    direction = result_query[0][1]
+                cursor.close()
+                conn["conn"].close()
+        except Exception as e:
+            print(f"\n\n ### ERROR CHECK M5-V2 | ERROR: {e} ### ")
+            try:
+                cursor.close()
+                conn["conn"].close()
+            except Exception as e:
+                print(f"\n\n ### CHECK M5-V2 | ERRO AO ENCERRAR DB | ERROR: {e} ### ")
+
     
 
     obj_to_database = {
@@ -303,13 +338,17 @@ def estrategia_1(estrategia, dataframe, status_alert, padrao, version, active):
         else:
             observation = "call - sem conf. sup res"
     
-    # elif dataframe["status_candle"][id_5] == "alta" and dataframe["status_candle"][id_4] == "baixa" and dataframe["status_candle"][id_3] == "baixa" and dataframe["status_candle"][id_2] == "alta" and dataframe["status_candle"][id_1] == "alta":
+    # elif dataframe["status_candle"][id_5] == "alta" and dataframe["status_candle"][id_4] == "baixa" and dataframe["status_candle"][id_3] == "baixa" and dataframe["status_candle"][id_2] == "alta" and dataframe["status_candle"][id_1] == "alta":    
     elif dataframe["status_candle"][id_5] == "alta" and dataframe["status_candle"][id_4] == "baixa" and dataframe["status_candle"][id_2] == "alta" and dataframe["status_candle"][id_1] == "alta":
-        if dataframe["res_15m_extrato_tm"][id_1] >= 3 or dataframe["res_1h_extrato_tm"][id_1] >= 1 or  dataframe["res_4h_extrato_tm"][id_1] >= 1:
+        if dataframe["res_15m_extrato_tm"][id_1] == 0 and dataframe["res_1h_extrato_tm"][id_1] == 1 and dataframe["res_4h_extrato_tm"][id_1] == 0:
+            observation = "#1 put - sem conf. sup res"
+        # ----
+        elif dataframe["res_15m_extrato_tm"][id_1] == 1 and dataframe["res_1h_extrato_tm"][id_1] == 1:
+            observation = "#2 put - sem conf. sup res"
+        # ----
+        elif dataframe["res_15m_extrato_tm"][id_1] >= 3 or dataframe["res_1h_extrato_tm"][id_1] >= 1 or  dataframe["res_4h_extrato_tm"][id_1] >= 1:
             direction = "put"
             result_confluencias = True
-        else:
-            observation = "put - sem conf. sup res"
     
     prepare_signal_to_database(dataframe, direction, status_alert, padrao, version, active, observation, result_confluencias,
                                sup_m15, sup_1h, sup_4h, res_m15, res_1h, res_4h)
@@ -345,9 +384,13 @@ def estrategia_2(estrategia, dataframe, status_alert, padrao, version, active):
             result_confluencias = True
         else:
             observation = "call - sem conf. sup res"
-
+    # ----
     elif dataframe["status_candle"][id_7] == "alta" and dataframe["status_candle"][id_6] == "baixa" and dataframe["status_candle"][id_5] == "alta" and dataframe["status_candle"][id_4] == "alta" and dataframe["status_candle"][id_3] == "alta" and dataframe["status_candle"][id_2] == "alta":
-        if dataframe["res_15m_extrato_tm"][id_1] == 1 or dataframe["res_1h_extrato_tm"][id_1] == 1 or  dataframe["res_4h_extrato_tm"][id_1] == 1:
+        if dataframe["res_1h_extrato_tm"][id_1] >= 1:
+            observation = "put - sem conf. sup res"
+        elif dataframe["res_15m_extrato_tm"][id_1] >= 1 or dataframe["res_1h_extrato_tm"][id_1] >= 1:
+            observation = "put - sem conf. sup res"
+        elif dataframe["res_15m_extrato_tm"][id_1] == 1 or dataframe["res_1h_extrato_tm"][id_1] == 0 and dataframe["res_4h_extrato_tm"][id_1] >= 1:
             direction = "put"
             result_confluencias = True
         else:

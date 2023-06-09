@@ -88,7 +88,7 @@ class ProcessAPI:
             return _auth
     # --------------------
     def threading_process_api(self):
-        list_check_tm = []
+        list_check_tm = list()
         try:
             while True:
                 if self.control_bool_api == True:
@@ -111,6 +111,12 @@ class ProcessAPI:
                                 self.process_operation(minutes=_minutes, type_process="process_comum")
                             elif _seconds >= 40 and _seconds <= 41:
                                 self.process_operation(minutes=_minutes, type_process="process_open_operation")
+                        
+                        # ----
+                        if len(list_check_tm) >= 30:
+                            print(f"CHECK LEN list_check_tm | TAM: {len(list_check_tm)}")
+                            list_check_tm = list()
+                            print(f"CLEAR list_check_tm | TAM: {len(list_check_tm)} | FINISH PROCESS CLEAR.")
                     except Exception as e:
                         print(e)
                 else:

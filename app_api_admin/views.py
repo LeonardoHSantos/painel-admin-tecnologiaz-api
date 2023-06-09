@@ -256,8 +256,6 @@ def get_data_pre_estrategia(request):
             print(f" #### ERRO AO PROCESSAR PRE ANÁLISE | ERROR: {e}")
             return JsonResponse({"code-process": 400, "msg": "erro ao processar pré análise."})
 
-def process_pre_analise():
-    return 
 
 # -------------------
 @login_required(login_url="login_admin")

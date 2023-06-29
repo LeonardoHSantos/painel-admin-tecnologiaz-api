@@ -18,6 +18,9 @@ else if (link_actual.pathname.includes("config-visao-geral")) {
 else if (link_actual.pathname.includes("pre-analise")) {
     nameClassAux = "pre-analise"
 }
+else if (link_actual.pathname.includes("operations-full")) {
+    nameClassAux = "operations-full"
+}
 // ----------------------------------------------------------------------------------------------
 let content_footer = document.querySelector(".content-footer");
 if (link_actual.pathname.includes("config-admin") | link_actual.pathname.includes("/")) {

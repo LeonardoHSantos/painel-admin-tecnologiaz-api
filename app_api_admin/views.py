@@ -243,7 +243,7 @@ def get_data_pre_estrategia(request):
                 --> data_inicio: {data_inicio}
                 --> data_fim: {data_fim}
             """)
-            data = json.loads(requests.post(url=f"http://{IP_SERVER_API_PRE_ANALISE}/run-analysis/", data= json.dumps(data)).content)
+            data = json.loads(requests.post(url=f"http://{IP_SERVER_API_PRE_ANALISE}/v3/run-analysis/", data= json.dumps(data)).content)
             
             # import pandas as pd
             # obj_to_html = json.loads(data["data_to_html"])
@@ -272,6 +272,8 @@ def autenticao_iqoption(request):
             "email": q["email"],
             "status_api_2": q["status_api_2"],
             "email_2": q["email_2"],
+            "status_api_3": q["status_api_3"],
+            "email_3": q["email_3"],
         }
         return render(request, "app/autenticacao_broker.html", context)
     elif request.method == "POST":

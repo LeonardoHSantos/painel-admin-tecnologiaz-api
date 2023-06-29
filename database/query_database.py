@@ -446,6 +446,8 @@ def query_status_api():
                 "email": result_query[0][2],
                 "status_api_2": result_query[1][1],
                 "email_2": result_query[1][2],
+                "status_api_3": result_query[2][1],
+                "email_3": result_query[2][2],
                 }
         else:
             return {"status_api": False}

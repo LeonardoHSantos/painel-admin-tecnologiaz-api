@@ -5,6 +5,9 @@ function getDataDashboardPrincipal(url) {
 
     let input_data_inicial = document.getElementById("input-data-inicial").value;
     let input_data_final = document.getElementById("input-data-final").value;
+
+
+    
     let input_mercado = document.getElementById("input-mercado").value;
     let input_ativo = document.getElementById("input-ativo").value;
     let input_direcao = document.getElementById("input-direcao").value;

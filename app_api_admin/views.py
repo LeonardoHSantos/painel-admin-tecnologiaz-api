@@ -12,7 +12,7 @@ from config_auth import LIST_PADROES, LIST_ALERTAS, IP_SERVER_API_PRE_ANALISE
 
 from base_process.process.api.process_api import ProcessAPI
 from base_process.process.expirations.expiration_candle import datetime_now
-from database.query_prod import query_database_prod_estrategia, edit_registro_visao_geral
+from database.query_prod import query_database_prod_estrategia, edit_registro_visao_geral, query_database_prod_estrategia_all
 from database.query_database import query_database_estrategia, update_database_estrategia, update_status_api, query_status_api, query_database_actives_all, query_database_results_calc, query_visao_geral_config_database_api
 
 
@@ -121,7 +121,23 @@ def home(request):
             "list_padroes": LIST_PADROES,
             "list_alertas": LIST_ALERTAS,
         }
-        return render(request, "app/home.html", context=context)      
+        return render(request, "app/home.html", context=context) 
+# -------------------
+@login_required(login_url="login_admin")
+def home_2(request):
+    # print(f"USER ----------------> {str(request.user)}")
+    if request.method == "GET":
+        query = query_database_actives_all()
+        print(query)
+        list_actives = query
+        list_padroes = [""]
+        # print(f"---------------->>> ACTIVES ALL: {list_actives}")
+        context = {
+            "list_actives": list_actives,
+            "list_padroes": LIST_PADROES,
+            "list_alertas": LIST_ALERTAS,
+        }
+        return render(request, "app/home_all.html", context=context)      
 # -------------------
 @login_required(login_url="login_admin")
 def config_admin(request):
@@ -393,7 +409,53 @@ def query_results_operations_get_data_dashboard(request):
         except Exception as e:
             print(e)
             return JsonResponse({"code": 400})
-
+# -------------------
+@csrf_exempt
+def query_results_operations_get_data_dashboard_all(request):
+    data_inicio = None
+    data_fim = None
+    if request.method == "POST":
+        data = json.loads(request.body)
+        data_inicio = data["data_inicio"]
+        data_fim = data["data_fim"]
+        # print(f"\n\n\nBODY --------------------->>>>> {data}")
+        if data_inicio == None or data_inicio == "":
+            data_inicio = datetime_now(tzone="America/Sao Paulo") + timedelta(days=-1)
+            data_inicio.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            data_inicio = data_inicio + f" 00:00:00"
+        # ------------------------------------
+        if data_fim == None or data_fim == "":
+            data_fim = datetime_now(tzone="America/Sao Paulo").replace(hour=23, minute=59, second=59, microsecond=0).strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            data_fim = data_fim + f" 23:59:59"
+        # ------------------------------------
+        string_query = "WHERE "
+        for k, v in data.items():
+            # print(f"------------------------>>> K: {k} | V: {v}")
+            if k != "data_inicio" and k != "data_fim":
+                if v != "todos" and v != "":
+                    if string_query == "WHERE ":
+                        string_query = string_query + f' {k} = "{v}"'
+                    else:
+                        string_query = string_query + f' and {k} = "{v}"'
+                    # print(string_query)
+        
+        # string_query.replace("WHERE  and", "WHERE ")
+        if string_query == "WHERE ":
+            string_query = string_query + f'expiration_alert >= "{data_inicio}" and expiration_alert <= "{data_fim}"'
+        elif string_query != "WHERE ":
+            string_query = string_query + f' and expiration_alert >= "{data_inicio}" and expiration_alert <= "{data_fim}"'
+        # print(f"QUERY -------->>> {string_query}")
+        
+        try:
+            # data = query_results_operations(string_query=string_query)
+            data = query_database_prod_estrategia_all(string_query)
+            # print(f"DATA RESULT -------------> {data}")
+            return JsonResponse({"code": 200, "data": json.dumps(data[0]), "resume_results": data[1]})
+        except Exception as e:
+            print(e)
+            return JsonResponse({"code": 400})
 # -------------------
 @login_required(login_url="login_admin")
 def painel_config_test(request):

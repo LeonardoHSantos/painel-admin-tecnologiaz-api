@@ -17,6 +17,15 @@ for (let i=0; i < status_api_2.options.length; i++){
         status_api_2.options[i].selected = false;
     }
 }
+// ---------------------------------------
+let status_api_3 = document.getElementById("status-api-app-3");
+for (let i=0; i < status_api_3.options.length; i++){
+    if (status_api_3.className == status_api_3.options[i].value) {
+        status_api_3.options[i].selected = true;
+    } else {
+        status_api_3.options[i].selected = false;
+    }
+}
 // 
 function controlAPI(url_start_api, url_stop_api) {
     //

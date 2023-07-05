@@ -8,6 +8,10 @@
             <nav>
                 <ul>
                     {% if user.is_authenticated %}
+                        <li class="link-resume">
+                            <i class="fa-solid fa-square-poll-horizontal"></i>
+                            <a href="{% url 'get_data_resume' %}" class="link-navbar-data-resume">Resumo</a>
+                        </li>
                         <li class="link-home">
                             <i class="fa-solid fa-house"></i>
                             <a href="{% url 'home' %}" class="link-navbar-home">Home</a>

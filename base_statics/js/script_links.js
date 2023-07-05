@@ -21,6 +21,9 @@ else if (link_actual.pathname.includes("pre-analise")) {
 else if (link_actual.pathname.includes("operations-full")) {
     nameClassAux = "operations-full"
 }
+else if (link_actual.pathname.includes("data-resume")) {
+    nameClassAux = "data-resume"
+}
 // ----------------------------------------------------------------------------------------------
 let content_footer = document.querySelector(".content-footer");
 if (link_actual.pathname.includes("config-admin") | link_actual.pathname.includes("/")) {

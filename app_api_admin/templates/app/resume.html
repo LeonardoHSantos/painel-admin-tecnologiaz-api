@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% block title %}Resumo - Resultados{% endblock %}
+{% load static %}
+{% block content %}
+    <div class="content">
+
+        <div class="title-content-dashboard">
+            <h3>Resultados das Operações do Dia</h3>
+        </div>
+        <div class="content-resume-results">
+            <div>
+                <div class="card-resume-results">
+                    <p  class="data-result-title">Registros</p>
+                    <p  class="data-result-value content-tt-registros">{{data.tt_resume}}</p>
+                </div>
+                <div class="card-resume-results">
+                    <p  class="data-result-title">Total Empate</p>
+                    <p  class="data-result-value content-tt-empate">{{data.tt_empate}}</p>
+                </div>
+            </div>
+            <div>
+                <div class="card-resume-results tt-result-win">
+                    <p  class="data-result-title">Total Win</p>
+                    <p  class="data-result-value content-tt-win">{{data.tt_win}}</p>
+                </div>
+                <div class="card-resume-results tt-result-loss">
+                    <p class="data-result-title">Total Loss</p>
+                    <p class="data-result-value content-tt-loss">{{data.tt_loss}}</p>
+                </div>
+            </div>
+            <!--  -->
+            <div>
+                <div class="card-resume-results tt-result-win">
+                    <p class="data-result-title">Perc. Win %</p>
+                    <p class="data-result-value value-perc-win">{{data.perc_win}}</p>
+                </div>
+                <div class="card-resume-results tt-result-loss">
+                    <p class="data-result-title">Perc. Loss %</p>
+                    <p class="data-result-value value-perc-loss">{{data.perc_loss}}</p>
+                </div>
+            </div>
+            <!--  -->
+            <div>
+                <div class="card-resume-results">
+                    <p  class="data-result-title title-win">Tt. Win - Call</p>
+                    <p  class="data-result-value content-tt-win-call">{{data.tt_win_call}}</p>
+                </div>
+                <div class="card-resume-results">
+                    <p  class="data-result-title title-loss">Tt. Loss - Call</p>
+                    <p  class="data-result-value content-tt-loss-call">{{data.tt_loss_call}}</p>
+                </div>
+            </div>
+            <div>
+                <div class="card-resume-results">
+                    <p  class="data-result-title title-win">Tt. Win - Put</p>
+                    <p  class="data-result-value content-tt-win-put">{{data.tt_win_put}}</p>
+                </div>
+                <div class="card-resume-results">
+                    <p  class="data-result-title title-loss">Tt. Loss - Put</p>
+                    <p  class="data-result-value content-tt-loss-put">{{data.tt_loss_put}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="container-chart-results">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <div class="container-table-resume">
+            <table id="table-resume-results">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Horário</th>
+                        <th>Padrão</th>
+                        <th>Ativo</th>
+                        <th>Mercado</th>
+                        <th>Direção</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const CSRF_token = '{{ csrf_token }}';
+            console.log("CSRF_token: ", CSRF_token)
+            
+            fetch("{% url 'get_data_resume' %}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': CSRF_token
+                }
+            }).then((data)=>{
+                return data.json();
+            }).then(data =>{
+                console.log(data);
+                // --------------------------------------
+                let table_resume_results = document.getElementById("table-resume-results");
+                table_resume_results.querySelector("tbody").remove();
+                table_resume_results.innerHTML += "<tbody></tbody>";
+
+                for (let i in data["data"]["obj_results_table"]){
+                    let classNameResult = data["data"]["obj_results_table"][i]["classNameResult"];
+                    let classNameDirection = data["data"]["obj_results_table"][i]["classNameDirection"];
+                    table_resume_results.querySelector("tbody").innerHTML += `
+                        <tr>
+                            <td class="content-result-value" >${i}</td>
+                            <td class="content-result-value" >${data["data"]["obj_results_table"][i]["horario"]}</td>
+                            <td class="content-result-value" >${data["data"]["obj_results_table"][i]["padrao"]}</td>
+                            <td class="content-result-value" >${data["data"]["obj_results_table"][i]["active"]}</td>
+                            <td class="content-result-value" >${data["data"]["obj_results_table"][i]["mercado"]}</td>
+                            <td class="content-result-value ${classNameDirection}" >${data["data"]["obj_results_table"][i]["direction"]}</td>
+                            <td class="content-result-value ${classNameResult}" >${data["data"]["obj_results_table"][i]["resultado"]}</td>
+                        </t>
+                    `;
+                    console.log(data["data"]["obj_results_table"][i]["horario"])
+                }
+                // --------------------------------------
+                document.querySelector(".content-tt-registros").textContent = data["data"]["tt_resume"];
+                document.querySelector(".content-tt-empate").textContent = data["data"]["tt_empate"];
+                document.querySelector(".content-tt-win").textContent = data["data"]["tt_win"];
+                document.querySelector(".content-tt-loss").textContent = data["data"]["tt_loss"];
+                // --------------------------------------
+                
+                // --------------------------------------
+                let value_perc_win = document.querySelector(".value-perc-win");
+                let value_perc_loss = document.querySelector(".value-perc-loss");
+                value_perc_win.textContent = parseFloat(data["data"]["perc_win"]).toFixed(2)+"%";
+                value_perc_loss.textContent = parseFloat(data["data"]["perc_loss"]).toFixed(2)+"%";
+                value_perc_loss.style.fontSize  = "27px";
+                value_perc_win.style.fontSize   = "27px";
+                // --------------------------------------
+                document.querySelector(".content-tt-win-call").textContent = data["data"]["tt_win_call"];
+                document.querySelector(".content-tt-loss-call").textContent = data["data"]["tt_loss_call"];
+                // --------------------------------------
+                document.querySelector(".content-tt-win-put").textContent = data["data"]["tt_win_put"];
+                document.querySelector(".content-tt-loss-put").textContent = data["data"]["tt_loss_put"];
+                // --------------------------------------
+                const ctx = document.getElementById('myChart');
+                new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: data["data"]["list_actives_chart"][0],
+                    datasets: [
+                        {
+                            label: 'win',
+                            data: data["data"]["list_actives_chart"][1],
+                            borderWidth: 1,
+                            backgroundColor: "#45fd02",
+                        },
+                        {
+                            label: 'loss',
+                            data: data["data"]["list_actives_chart"][2],
+                            borderWidth: 1,
+                            backgroundColor: "#fd0202",
+                        }
+                    ]
+                  },
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
+                      }
+                    }
+                  }
+                });
+            });
+          </script>
+    </div>
+{% endblock %}

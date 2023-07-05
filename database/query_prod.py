@@ -408,6 +408,149 @@ def query_operations_resume_M5(active_name, estrategia):
         except Exception as e:
             print(f"ERROR DESCONNECT 2 | ERROR: {e}")
 
+# --------------------------------------------------------------  
+# query - ranking results
+def query_operations_resume_M5_today():
+    try:
+        conn = conn_db_producao()
+        cursor = None
+        dict_resume = None
+        obj_actives_win     = dict()
+        obj_actives_loss    = dict()
+        if conn["status_conn_db"] == True:
+            cursor = conn["conn"].cursor()
+
+            dt_now = datetime_now(tzone="America/Sao Paulo").replace(microsecond=0, second=0, minute=0, hour=0) #  day=4
+            comando_query = f'''
+            SELECT 
+                id, padrao, active, mercado, direction, resultado, expiration_alert, alert_datetime, alert_time_update, status_alert
+            FROM
+                {TABLE_NAME_OPERATIONS}
+            where expiration_alert >= "{dt_now}" and status_alert = "alert-open-operation";
+            '''
+            print(comando_query)
+            cursor.execute(comando_query)
+            result_query = cursor.fetchall()
+            tt_query = len(result_query)
+            #  -------
+            if tt_query >= 1:
+                tt_win = 0
+                tt_loss = 0
+                tt_empate = 0
+                tt_resume = 0
+                perc_win = 0.0
+                perc_loss = 0.0
+                # ----
+                tt_win_call = 0
+                tt_win_put = 0
+                tt_loss_call = 0
+                tt_loss_put = 0
+                tt_resume = 0
+
+                obj_results_table = list()
+                
+                for result in result_query:
+                    
+                    active = result[2]
+                    results = result[5]
+                    values = {active: 0}
+                    if active not in obj_actives_win.keys():
+                        obj_actives_win.update(values)
+                        obj_actives_loss.update(values)
+                    
+                    classNameDirection = "direction-comum"
+                    classNameResult = "result-comum"
+                    # ----
+                    if result[4].lower() == "call":
+                        classNameDirection = "result-win"
+                    elif result[4].lower() == "put":
+                        classNameDirection = "result-loss"
+                    # --------------------------------------
+                    if result[5] == "win":
+                        classNameResult = "result-win"
+                        obj_actives_win[active] += 1
+                        tt_win += 1
+                        if result[4] == "call":
+                            tt_win_call += 1
+                        elif result[4] == "put":
+                            tt_win_put += 1
+                    # ----
+                    elif result[5] == "loss":
+                        classNameResult = "result-loss" 
+                        obj_actives_loss[active] += 1
+                        tt_loss += 1
+                        if result[4] == "call":
+                            tt_loss_call += 1
+                        elif result[4] == "put":
+                            tt_loss_put += 1
+                    # ----
+                    elif result[5] == "empate":
+                        tt_empate += 1
+                    tt_resume += 1
+                    data_table = {
+                        "id": result[0],
+                        "padrao": result[1],
+                        "active": result[2],
+                        "mercado": result[3],
+                        "direction": result[4].lower(),
+                        "resultado": result[5].lower(),
+                        "horario": result[6].strftime("%d-%m-%Y %H:%M:%S"),
+                        "classNameDirection": classNameDirection,
+                        "classNameResult": classNameResult,
+                    }
+                    obj_results_table.append(data_table)
+
+                if tt_resume >= 1:
+                    if tt_win >= 1:
+                        perc_win = float(tt_win / tt_resume)
+                    if tt_loss >= 1:
+                        perc_loss = float(tt_loss / tt_resume)
+                    
+                    list_actives_chart = [[], [], []]
+                    for k, v in obj_actives_win.items():
+                        list_actives_chart[0].append(k)
+                        list_actives_chart[1].append(obj_actives_win[k])
+                        list_actives_chart[2].append(obj_actives_loss[k])
+                    
+                    dict_resume = {
+                        "tt_resume":tt_resume,
+                        "tt_win":tt_win,
+                        "tt_loss":tt_loss,
+                        "tt_empate":tt_empate,
+                        "perc_win":  perc_win *100,
+                        "perc_loss":  perc_loss *100,
+                        "tt_win_call": tt_win_call,
+                        "tt_win_put": tt_win_put,
+                        "tt_loss_call": tt_loss_call,
+                        "tt_loss_put": tt_loss_put,
+                        "obj_actives_win": obj_actives_win,
+                        "obj_actives_loss": obj_actives_loss,
+                        "list_actives_chart": list_actives_chart,
+                        "obj_results_table": obj_results_table
+                    }
+            print(f"\n\n ### RESULTS TODAY:\n{dict_resume}")
+        
+        try:
+            cursor.close()
+            conn["conn"].close()
+            print(" DB - DESCONECTADO ")
+        except:
+            print(f"\n\n **** 1# ERROR DISCONNECT DATABASE | RESULTS TODAY | ERROR: {e}")
+        return dict_resume
+    except Exception as e:
+        print(f"\n\n **** 2# ERROR PROCESS QUERY RESULTS TODAY | ERROR: {e}")
+        try:
+            cursor.close()
+            conn["conn"].close()
+            print(" DB - DESCONECTADO ")
+        except:
+            print(f"\n\n **** 2# ERROR DISCONNECT DATABASE | RESULTS TODAY | ERROR: {e}")
+        return None
+                
+
+
+
+
 def update_ranking_M5(obj_results):
     active_name = obj_results["active_name"]
     estrategia = obj_results["estrategia"]

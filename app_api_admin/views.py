@@ -12,7 +12,7 @@ from config_auth import LIST_PADROES, LIST_ALERTAS, IP_SERVER_API_PRE_ANALISE
 
 from base_process.process.api.process_api import ProcessAPI
 from base_process.process.expirations.expiration_candle import datetime_now
-from database.query_prod import query_database_prod_estrategia, edit_registro_visao_geral, query_database_prod_estrategia_all
+from database.query_prod import query_database_prod_estrategia, edit_registro_visao_geral, query_database_prod_estrategia_all, query_operations_resume_M5_today
 from database.query_database import query_database_estrategia, update_database_estrategia, update_status_api, query_status_api, query_database_actives_all, query_database_results_calc, query_visao_geral_config_database_api
 
 
@@ -138,6 +138,19 @@ def home_2(request):
             "list_alertas": LIST_ALERTAS,
         }
         return render(request, "app/home_all.html", context=context)      
+# -------------------
+@login_required(login_url="login_admin")
+# @csrf_exempt
+def get_data_resume(request):
+    if request.method == "GET":
+        context={"code": False}
+        return render(request, "app/resume.html", context=context)
+    elif request.method == "POST":
+        print(request.POST)
+        data = query_operations_resume_M5_today()
+        print(data)
+        print(f"\n\n\n POST: {request.body}")
+        return JsonResponse({"data": data})
 # -------------------
 @login_required(login_url="login_admin")
 def config_admin(request):

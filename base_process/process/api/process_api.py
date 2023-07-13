@@ -109,7 +109,7 @@ class ProcessAPI:
                                 self.process_check_results_operations()
                             elif _seconds >= 12 and _seconds <= 13:
                                 self.process_operation(minutes=_minutes, type_process="process_comum")
-                            elif _seconds >= 40 and _seconds <= 41:
+                            elif _seconds >= 35 and _seconds <= 36:
                                 self.process_operation(minutes=_minutes, type_process="process_open_operation")
                         
                         # ----
